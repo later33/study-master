@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyMaster — 备考助手</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0d11;--bg2:#13151e;--bg3:#1a1d28;--bg4:#21253a;
+  --border:#252832;--border2:#2e3245;
+  --text:#ece8de;--text2:#9096a8;--text3:#555b70;
+  --amber:#c89256;--amber2:#e6a96a;--amber3:#f0bc84;
+  --blue:#5c88c8;--blue2:#7aa3e0;
+  --green:#5aaa78;--red:#d96868;--yellow:#d4b254;
+  --r:10px;--r2:16px;--r3:24px
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+h1,h2,h3,.serif{font-family:'Crimson Pro',serif}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;transition:.15s}
+input,textarea{font-family:inherit;outline:none;transition:.15s}
+input:focus,textarea:focus{border-color:var(--amber)!important}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* Layout */
+#app{max-width:760px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:80px}
+.page{padding:28px 20px 16px;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Nav */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:760px;background:rgba(12,13,17,.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(14px,env(safe-area-inset-bottom));z-index:100}
+nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text3);font-size:10px;letter-spacing:.5px;padding:4px 12px;transition:.2s}
+nav button.active{color:var(--amber)}
+nav svg{width:20px;height:20px}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.card:hover .hoverable{color:var(--amber)}
+
+/* Buttons */
+.btn{border:none;border-radius:var(--r);padding:13px 24px;font-size:14px;font-weight:500;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--amber),#b07840);color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--bg4);color:var(--text3);cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--amber);color:var(--amber)}
+.btn-block{width:100%;display:block}
+
+/* Tags / Pills */
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+
+/* Form */
+.input{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:11px 14px;color:var(--text);font-size:14px;width:100%}
+.input::placeholder{color:var(--text3)}
+
+/* Section label */
+.label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+
+/* Page header */
+.page-header{margin-bottom:24px}
+.page-header h2{font-size:26px;font-weight:700;color:var(--text);margin-bottom:2px}
+.page-header .sub{font-size:13px;color:var(--text3)}
+.page-header .accent-line{height:2px;width:36px;background:var(--amber);border-radius:1px;margin-top:10px}
+
+/* Exam switcher */
+.exam-tabs{display:flex;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:6px}
+.exam-tab{flex:1;border:none;border-radius:var(--r);padding:10px 12px;font-size:13px;font-weight:500;background:transparent;color:var(--text3);transition:.2s;text-align:center}
+.exam-tab.active{background:var(--bg4);color:var(--text)}
+.exam-tab.active.ielts{color:var(--amber);border:1px solid var(--amber)33}
+.exam-tab.active.kaoyan{color:var(--blue2);border:1px solid var(--blue)33}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 12px;text-align:center}
+.stat-card .val{font-family:'Crimson Pro',serif;font-size:32px;font-weight:700;line-height:1;margin:8px 0 4px}
+.stat-card .lbl{font-size:11px;color:var(--text3)}
+
+/* Quick actions grid */
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.action-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px 16px;cursor:pointer;transition:.2s;text-align:left;color:inherit}
+.action-card:hover{border-color:var(--amber)66;background:var(--bg3)}
+.action-card .icon{font-size:22px;margin-bottom:10px}
+.action-card .title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px}
+.action-card .desc{font-size:12px;color:var(--text3)}
+
+/* Practice */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mode-card{background:var(--bg2);border:2px solid var(--border);border-radius:var(--r2);padding:28px 20px;cursor:pointer;transition:.2s;text-align:center;color:inherit}
+.mode-card:hover{border-color:var(--amber)88;background:var(--bg3)}
+.mode-card .emoji{font-size:40px;margin-bottom:12px}
+.mode-card h3{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.mode-card .sub{font-size:12px;color:var(--text3)}
+
+.passage-box{background:#0a0b10;border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:22px;font-size:15px;line-height:1.9;color:#c4c0b8}
+.passage-box p{margin-bottom:12px}
+.passage-box p:last-child{margin-bottom:0}
+
+.q-card{background:#0d0f16;border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:12px;transition:.2s}
+.q-card.correct{background:#091811;border-color:#2a5a38}
+.q-card.wrong{background:#160a0a;border-color:#5a2a2a}
+.q-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:600;background:var(--amber)22;color:var(--amber);margin-bottom:10px}
+.q-text{font-size:14px;line-height:1.65;color:#c8c4bc;margin-bottom:12px}
+.q-option{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;transition:.15s;margin-bottom:6px;font-size:13px;color:#b0acac}
+.q-option:hover{background:var(--bg4);border-color:var(--border2)}
+.q-option.selected{background:#14213a;border-color:var(--blue)66;color:var(--text)}
+.q-option.opt-correct{background:#0d2318;border-color:#2a6a3a;color:var(--green)}
+.q-option.opt-wrong{background:#1f0d0d;border-color:#6a2a2a;color:var(--red)}
+.q-input{background:#0d0f16;border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:14px;width:100%}
+.q-feedback{font-size:12px;padding-top:10px;margin-top:10px;border-top:1px solid var(--border)}
+
+/* Score display */
+.score-display{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:28px;text-align:center;margin-bottom:16px}
+.score-num{font-family:'Crimson Pro',serif;font-size:72px;font-weight:700;line-height:1}
+.score-msg{font-size:15px;color:var(--text2);margin:8px 0 16px}
+.tip-box{background:#0e1a2a;border:1px solid #1e3a5a;border-radius:var(--r);padding:14px 16px;font-size:13px;color:#7aaecc;text-align:left;margin-bottom:20px}
+
+/* Vocab */
+.vocab-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:12px}
+.vocab-header{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.vocab-word{font-family:'Crimson Pro',serif;font-size:22px;font-style:italic;color:var(--text);flex:1}
+.vocab-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.vocab-detail{padding:0 16px 14px;border-top:1px solid var(--border)}
+.vocab-meaning{font-size:16px;color:var(--amber3);font-weight:500;margin:12px 0 6px}
+.vocab-example{font-size:13px;color:var(--text3);font-style:italic;margin-bottom:8px}
+.vocab-note{font-size:12px;color:var(--blue2)}
+.mastery-row{display:flex;gap:6px;padding:10px 16px;border-top:1px solid var(--border);align-items:center;flex-wrap:wrap}
+.mastery-btn{padding:4px 10px;border-radius:20px;font-size:11px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:.15s}
+.mastery-btn.active-0{background:#222;color:var(--text3);border-color:#333}
+.mastery-btn.active-1{background:#3a2510;color:#d4884a;border-color:#7a4820}
+.mastery-btn.active-2{background:#2a3010;color:var(--yellow);border-color:#5a6020}
+.mastery-btn.active-3{background:#103020;color:var(--green);border-color:#205a30}
+
+/* Filters */
+.filter-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.filter-btn{padding:6px 16px;border-radius:20px;font-size:12px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:.15s}
+.filter-btn.active{background:var(--amber);border-color:var(--amber);color:#111}
+
+/* Progress */
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.heat-day{aspect-ratio:1;border-radius:4px;background:var(--bg4);transition:.15s}
+.heat-label{font-size:10px;color:var(--text3);text-align:center;padding-bottom:4px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:12px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%}
+.bar{width:100%;border-radius:3px 3px 0 0;min-height:4px;transition:height .5s}
+.bar-val{font-size:9px;color:var(--text3)}
+.recent-item{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);color:var(--text2)}
+.recent-item:last-child{border-bottom:none}
+
+/* Setup screen */
+.setup-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.setup-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:36px 32px;max-width:420px;width:100%;text-align:center}
+.setup-logo{font-family:'Crimson Pro',serif;font-size:42px;font-weight:700;color:var(--amber);margin-bottom:4px}
+.setup-tagline{font-size:13px;color:var(--text3);margin-bottom:32px}
+
+/* Vocab add row */
+.add-row{display:flex;gap:10px;margin-bottom:18px}
+
+/* Loading */
+.loader{text-align:center;padding:60px 0}
+.spinner{width:36px;height:36px;border:2.5px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader p{font-size:13px;color:var(--text3)}
+
+/* Error */
+.error-box{background:#160a0a;border:1px solid #5a2020;border-radius:var(--r);padding:14px;font-size:13px;color:#ff8a8a;margin-bottom:16px}
+
+/* Scratch pad for vocab */
+.scratch-bar{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r);padding:12px 14px;margin-bottom:18px}
+.scratch-bar .label{margin-bottom:8px}
+
+/* Responsive */
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .stat-card .val{font-size:26px}
+  .action-grid{grid-template-columns:1fr 1fr}
+}
+
+/* Info hint */
+.hint{font-size:12px;color:var(--text3);line-height:1.5;padding:10px 14px;background:var(--bg3);border-radius:var(--r);margin-bottom:14px}
+
+/* Word actions */
+.word-actions{display:flex;gap:8px;flex-shrink:0}
+.icon-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;color:var(--text2);transition:.15s;white-space:nowrap}
+.icon-btn:hover{border-color:var(--amber);color:var(--amber)}
+.icon-btn.danger:hover{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────
+const S = {
+  page: 'home',
+  exam: ls('exam') || 'ielts',
+  vocab: ls('vocab') || [],
+  wrongQ: ls('wrongQ') || [],
+  progress: ls('progress') || {days:{},scores:[],streak:0,lastDate:null},
+  apiKey: ls('apiKey') || '',
+  practice: { mode:null, loading:false, data:null, answers:{}, submitted:false, score:null, error:'', addedWords:{} },
+  vocab_state: { filter:'all', loadingWord:null, meanings:{}, input:'' },
+  wrong_state: { filter:'all', reviewing:null, answer:'', checked:false },
+};
+
+function ls(k,v){if(v===undefined){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null}catch{return null}}localStorage.setItem(k,JSON.stringify(v))}
+function save(k,v){S[k]=v;ls(k,v)}
+
+// ─── Exam configs ─────────────────────────────────────────────────
+const EXAMS = {
+  ielts:{label:'IELTS',sub:'General Training',color:'var(--amber)',topics:['工作与职场','旅行与交通','健康与饮食','环境与自然','教育与学习','科技与网络','文化与社会','购物与消费','社区与邻里','娱乐与休闲'],prompt:(type,topic)=>`You are an IELTS General Training examiner. Generate a ${type==='reading'?'reading passage 280-320 words, Section 2 or 3 style':'listening script 250-280 words, natural conversation or monologue'} on topic "${topic}". Vocabulary B1-B2. Then give 5 questions: 2 True/False/Not Given, 2 multiple choice (4 options each), 1 gap fill. Return ONLY valid JSON no markdown:\n{"title":"...","passage":"...","questions":[{"id":1,"type":"tfng","question":"...","options":["True","False","Not Given"],"answer":"True"},{"id":2,"type":"tfng","question":"...","options":["True","False","Not Given"],"answer":"False"},{"id":3,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"A. ..."},{"id":4,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"B. ..."},{"id":5,"type":"gap","question":"Complete: The ___ ...","answer":"exact word"}],"tip":"一句中文IELTS学习提示"}`},
+  kaoyan:{label:'考研英语',sub:'English Section',color:'var(--blue2)',topics:['社会现象','经济发展','文化教育','科学技术','环境保护','人文历史','政治外交','心理健康','城乡发展','全球化'],prompt:(type,topic)=>`You are a 考研 English teacher. Generate a ${type==='reading'?'reading comprehension passage 350-400 words, formal academic style':'cloze passage 280-300 words'} on topic "${topic}". Vocabulary B2-C1 formal. Give 5 questions: 4 multiple choice (4 options each), 1 True/False/Not Given. Return ONLY valid JSON no markdown:\n{"title":"...","passage":"...","questions":[{"id":1,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"A. ..."},{"id":2,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"B. ..."},{"id":3,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"C. ..."},{"id":4,"type":"mc","question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"answer":"D. ..."},{"id":5,"type":"tfng","question":"...","options":["True","False","Not Given"],"answer":"True"}],"tip":"一句中文考研备考提示"}`}
+};
+
+// ─── API ──────────────────────────────────────────────────────────
+async function callAPI(prompt){
+  const res=await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.apiKey},
+    body:JSON.stringify({model:'qwen-plus',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await res.json();
+  if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+  const txt=d.choices?.[0]?.message?.content||'';
+  return JSON.parse(txt.replace(/```json|```/g,'').trim());
+}
+
+// ─── Router ───────────────────────────────────────────────────────
+function nav(page){S.page=page;render()}
+
+// ─── Render ───────────────────────────────────────────────────────
+function render(){
+  const app=document.getElementById('app');
+  if(!S.apiKey){app.innerHTML=setupHTML();bindSetup();return}
+  app.innerHTML=`${pageHTML()}<nav>${navItems()}</nav>`;
+  bindPage();
+}
+
+function navItems(){
+  const icons={
+    home:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    practice:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    vocab:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+    wrong:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+    progress:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`
+  };
+  const labels={home:'主页',practice:'练习',vocab:'单词本',wrong:'错题本',progress:'进度'};
+  return Object.entries(icons).map(([k,v])=>`<button onclick="nav('${k}')" class="${S.page===k?'active':''}">${v}<span>${labels[k]}</span></button>`).join('');
+}
+
+function pageHTML(){
+  const pages={home:homeHTML,practice:practiceHTML,vocab:vocabHTML,wrong:wrongHTML,progress:progressHTML};
+  return `<div class="page">${(pages[S.page]||homeHTML)()}</div>`;
+}
+
+// ─── Setup ───────────────────────────────────────────────────────
+function setupHTML(){return`
+<div class="setup-wrap">
+  <div class="setup-card">
+    <div class="setup-logo">StudyMaster</div>
+    <div class="setup-tagline">IELTS · 考研英语 备考助手</div>
+    <div style="text-align:left;margin-bottom:24px">
+      <div class="hint">
+        🔑 本应用使用 阿里云通义千问 API 生成练习材料。你需要一个 API Key 才能使用。<br><br>
+        获取方式：前往 <a href="https://bailian.console.aliyun.com" target="_blank" style="color:var(--amber)">bailian.console.aliyun.com</a>，手机号注册 → 左侧「API-KEY」→ 创建 Key。<br><br>
+        Key 仅保存在你的浏览器本地，不会上传到任何服务器。
+      </div>
+    </div>
+    <input class="input" id="key-input" type="password" placeholder="sk-..." style="margin-bottom:14px">
+    <button class="btn btn-primary btn-block" id="key-save" style="font-size:15px;padding:15px">开始使用 →</button>
+  </div>
+</div>`}
+
+function bindSetup(){
+  document.getElementById('key-save').onclick=()=>{
+    const v=document.getElementById('key-input').value.trim();
+    if(!v.startsWith('sk-'))return alert('请输入有效的 API Key（以 sk- 开头）');
+    S.apiKey=v;ls('apiKey',v);render();
+  };
+  document.getElementById('key-input').onkeydown=e=>{if(e.key==='Enter')document.getElementById('key-save').click()};
+}
+
+// ─── Home ─────────────────────────────────────────────────────────
+function homeHTML(){
+  const today=new Date().toISOString().slice(0,10);
+  const todaySess=S.progress.days?.[today]||0;
+  const totalDays=Object.keys(S.progress.days||{}).length;
+  const scores=S.progress.scores||[];
+  const avg=scores.length?Math.round(scores.reduce((a,b)=>a+(b.score/b.total)*100,0)/scores.length):0;
+  const cfg=EXAMS[S.exam];
+
+  const recentHTML=scores.length?`
+    <div class="label" style="margin-top:20px">最近练习</div>
+    ${scores.slice(-4).reverse().map(s=>{
+      const pct=Math.round((s.score/s.total)*100);
+      const c=pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)';
+      return`<div class="card-sm" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><span style="font-size:13px;color:var(--text2)">${s.topic}</span><span style="font-size:11px;color:var(--text3);margin-left:8px">${s.date}</span></div>
+        <span style="font-weight:600;color:${c}">${s.score}/${s.total}</span>
+      </div>`;
+    }).join('')}`:''
+
+  return`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+      <div>
+        <div class="label">备考助手</div>
+        <h1 class="serif" style="font-size:34px;font-weight:700;line-height:1.1;color:var(--text)">Study<br><span style="color:var(--amber)">Master</span></h1>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:12px 18px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);letter-spacing:2px">STREAK</div>
+        <div class="serif" style="font-size:34px;font-weight:700;color:var(--amber);line-height:1">${S.progress.streak||0}</div>
+        <div style="font-size:10px;color:var(--text3)">天</div>
+      </div>
+    </div>
+
+    <div class="exam-tabs" style="margin-bottom:18px">
+      ${Object.entries(EXAMS).map(([k,e])=>`<button class="exam-tab ${S.exam===k?'active '+k:''}" onclick="switchExam('${k}')">${e.label}<br><span style="font-size:10px;opacity:.7">${e.sub}</span></button>`).join('')}
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div style="color:var(--amber);font-size:18px">🔥</div><div class="val" style="color:var(--amber)">${S.progress.streak||0}</div><div class="lbl">连续天数</div></div>
+      <div class="stat-card"><div style="color:var(--blue2);font-size:18px">📝</div><div class="val" style="color:var(--blue2)">${todaySess}</div><div class="lbl">今日练习</div></div>
+      <div class="stat-card"><div style="color:var(--green);font-size:18px">🎯</div><div class="val" style="color:var(--green)">${avg}<span style="font-size:14px">%</span></div><div class="lbl">平均得分</div></div>
+    </div>
+
+    <div class="label">快速开始</div>
+    <div class="action-grid">
+      <button class="action-card" onclick="nav('practice')"><div class="icon">⭐</div><div class="title">今日练习</div><div class="desc">AI生成阅读/听力</div></button>
+      <button class="action-card" onclick="nav('vocab')"><div class="icon">📖</div><div class="title">单词本</div><div class="desc">已收录 ${S.vocab.length} 个词</div></button>
+      <button class="action-card" onclick="nav('wrong')"><div class="icon">✏️</div><div class="title">错题本</div><div class="desc">${S.wrongQ.length} 题待复习</div></button>
+      <button class="action-card" onclick="nav('progress')"><div class="icon">📊</div><div class="title">学习进度</div><div class="desc">累计 ${totalDays} 天</div></button>
+    </div>
+    ${recentHTML}
+    <div style="text-align:right;margin-top:20px"><button onclick="clearKey()" style="background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit">⚙ 更换 API Key</button></div>
+  `}
+
+function switchExam(e){save('exam',e);render()}
+function clearKey(){if(confirm('确认退出并清除 API Key？')){ls('apiKey',null);S.apiKey='';render()}}
+
+// ─── Practice ────────────────────────────────────────────────────
+function practiceHTML(){
+  const p=S.practice;
+  const cfg=EXAMS[S.exam];
+  const dayNum=Object.keys(S.progress.days||{}).length+1;
+  const topic=cfg.topics[(dayNum-1)%cfg.topics.length];
+
+  if(p.loading)return`<div class="loader"><div class="spinner"></div><p>AI 正在生成练习材料…</p></div>`;
+  if(p.error)return`<div class="page-header"><h2>每日练习</h2></div><div class="error-box">${p.error}</div><button class="btn btn-outline" onclick="resetPractice()">← 返回</button>`;
+
+  if(!p.mode&&!p.data)return`
+    <div class="page-header"><h2>每日练习</h2><div class="sub">${cfg.label} · 今日话题：<span style="color:var(--amber)">${topic}</span></div><div class="accent-line"></div></div>
+    <div class="label">选择练习类型</div>
+    <div class="mode-grid">
+      <button class="mode-card" onclick="selectMode('reading')"><div class="emoji">📖</div><h3>阅读练习</h3><div class="sub">文章 + 5道题</div></button>
+      <button class="mode-card" onclick="selectMode('listening')"><div class="emoji">🎧</div><h3>${S.exam==='kaoyan'?'完形填空':'听力脚本'}</h3><div class="sub">对话/独白 + 5道题</div></button>
+    </div>`;
+
+  if(p.mode&&!p.data)return`
+    <div class="page-header"><h2>每日练习</h2><div class="sub">${topic} · ${p.mode==='reading'?'阅读':'听力'}</div><div class="accent-line"></div></div>
+    <div class="card" style="text-align:center;padding:32px;margin-bottom:16px">
+      <div style="font-size:48px;margin-bottom:12px">${p.mode==='reading'?'📖':'🎧'}</div>
+      <div style="font-size:15px;color:var(--text2);margin-bottom:20px">准备生成「<strong style="color:var(--text)">${topic}</strong>」${p.mode==='reading'?'阅读文章':'听力脚本'}</div>
+      <button class="btn btn-primary" style="min-width:180px" onclick="generatePractice('${topic}')">✨ 生成练习材料</button>
+    </div>
+    <button class="btn btn-outline" onclick="resetPractice()">← 返回</button>`;
+
+  if(p.data){
+    const qHTML=p.data.questions.map((q,i)=>{
+      const ua=p.answers[q.id];
+      const isC=p.submitted&&(ua||'').trim().toLowerCase()===q.answer.trim().toLowerCase();
+      const isW=p.submitted&&ua&&!isC;
+      return`<div class="q-card ${p.submitted?(isC?'correct':isW?'wrong':''):''}" >
+        <div class="q-badge">Q${i+1}</div>
+        <div class="q-text">${q.question}</div>
+        ${q.type==='gap'?
+          `<input class="q-input" ${p.submitted?'disabled':''} value="${(ua||'').replace(/"/g,'&quot;')}" placeholder="填入答案…" onchange="setAnswer(${q.id},this.value)" onkeyup="setAnswer(${q.id},this.value)">`:
+          q.options.map(opt=>{
+            const sel=ua===opt;
+            const optC=p.submitted&&opt.trim().toLowerCase()===q.answer.trim().toLowerCase();
+            return`<label class="q-option ${p.submitted?(optC?'opt-correct':sel&&!optC?'opt-wrong':''):sel?'selected':''}">
+              <input type="radio" name="q${q.id}" value="${opt.replace(/"/g,'&quot;')}" ${sel?'checked':''} ${p.submitted?'disabled':''} onchange="setAnswer(${q.id},'${opt.replace(/'/g,"\\'")}')"> ${opt}
+              ${optC&&p.submitted?'<span style="margin-left:auto;font-size:11px;color:var(--green)">✓</span>':''}
+            </label>`;
+          }).join('')
+        }
+        ${p.submitted?`<div class="q-feedback" style="color:${isC?'var(--green)':'var(--red)'}">
+          ${isC?'✅ 回答正确！':`❌ 正确答案：${q.answer}`}
+        </div>`:''}
+      </div>`;
+    }).join('');
+
+    const remaining=5-Object.keys(p.answers).length;
+
+    return`
+      <div class="page-header"><h2>${p.data.title}</h2><div class="sub">${S.exam.toUpperCase()} · ${p.mode==='reading'?'阅读':'听力脚本'}</div><div class="accent-line"></div></div>
+      <div class="passage-box">${p.mode!=='reading'?`<div class="hint" style="margin-bottom:14px">🎧 ${S.exam==='kaoyan'?'完形填空原文':'听力脚本'} — 请仔细阅读后作答</div>`:''}
+        ${p.data.passage.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('')}
+      </div>
+      ${!p.submitted?`<div class="scratch-bar"><div class="label">📌 划词添加生词</div><div style="display:flex;gap:8px"><input class="input" id="scratch-input" placeholder="输入不认识的单词…" style="flex:1" onkeydown="if(event.key==='Enter'){addFromScratch();event.preventDefault()}"><button class="btn btn-primary" style="padding:11px 16px" onclick="addFromScratch()">添加</button></div></div>`:''}
+      <div class="label">Questions</div>
+      ${qHTML}
+      ${!p.submitted?
+        `<button class="btn btn-primary btn-block" style="margin-top:8px" ${remaining>0?'disabled':''} onclick="submitPractice()">
+          ${remaining>0?`还有 ${remaining} 题未答`:'提交答案'}
+        </button>`:
+        `<div class="score-display">
+          <div class="score-num" style="color:${p.score>=4?'var(--green)':p.score>=3?'var(--yellow)':'var(--red)'}">${p.score}<span style="font-size:24px;color:var(--text3)">/ 5</span></div>
+          <div class="score-msg">${p.score===5?'🎉 完美！':p.score>=4?'👍 很好！':p.score>=3?'💪 继续加油！':'📚 多加练习！'}</div>
+          ${p.data.tip?`<div class="tip-box">💡 <strong>学习提示：</strong>${p.data.tip}</div>`:''}
+          <button class="btn btn-primary" style="min-width:200px" onclick="nextPractice()">继续下一篇 →</button>
+        </div>`
+      }
+      <button class="btn btn-outline" style="margin-top:10px;width:100%" onclick="resetPractice()">← 重新选择</button>`;
+  }
+}
+
+function selectMode(m){S.practice.mode=m;render()}
+function resetPractice(){S.practice={mode:null,loading:false,data:null,answers:{},submitted:false,score:null,error:'',addedWords:{}};render()}
+function nextPractice(){const dayNum=Object.keys(S.progress.days||{}).length+1;const cfg=EXAMS[S.exam];const topic=cfg.topics[(dayNum-1)%cfg.topics.length];S.practice={...S.practice,data:null,answers:{},submitted:false,score:null,error:'',addedWords:{}};render()}
+
+async function generatePractice(topic){
+  S.practice.loading=true;render();
+  try{
+    const cfg=EXAMS[S.exam];
+    const data=await callAPI(cfg.prompt(S.practice.mode,topic));
+    S.practice.data=data;S.practice.loading=false;render();
+  }catch(e){S.practice.loading=false;S.practice.error='生成失败：'+e.message;render()}
+}
+
+function setAnswer(id,val){S.practice.answers[id]=val;render()}
+
+function addFromScratch(){
+  const inp=document.getElementById('scratch-input');
+  if(!inp)return;
+  const w=inp.value.trim().toLowerCase();
+  if(!w||S.vocab.find(v=>v.word===w)){inp.value='';return}
+  const nv=[...S.vocab,{word:w,date:new Date().toISOString().slice(0,10),exam:S.exam,mastery:0}];
+  save('vocab',nv);inp.value='';
+}
+
+async function submitPractice(){
+  const p=S.practice;
+  let correct=0;
+  const newWrong=[...S.wrongQ];
+  p.data.questions.forEach(q=>{
+    const ua=(p.answers[q.id]||'').trim().toLowerCase();
+    const ca=q.answer.trim().toLowerCase();
+    if(ua===ca)correct++;
+    else if(!newWrong.find(w=>w.question===q.question&&w.exam===S.exam))
+      newWrong.push({...q,passage:p.data.title,exam:S.exam,topic:EXAMS[S.exam].topics[(Object.keys(S.progress.days||{}).length)%EXAMS[S.exam].topics.length],date:new Date().toISOString().slice(0,10),userAnswer:p.answers[q.id]||''});
+  });
+  S.practice.score=correct;S.practice.submitted=true;
+  save('wrongQ',newWrong);
+  // record progress
+  const today=new Date().toISOString().slice(0,10);
+  const pr={...S.progress};
+  pr.days={...pr.days,[today]:(pr.days[today]||0)+1};
+  const cfg=EXAMS[S.exam];
+  const dayNum=Object.keys(pr.days).length;
+  const topic=cfg.topics[(dayNum-1)%cfg.topics.length];
+  pr.scores=[...(pr.scores||[]).slice(-29),{date:today,score:correct,total:5,exam:S.exam,topic}];
+  if(pr.lastDate===today){}
+  else if(pr.lastDate===new Date(Date.now()-86400000).toISOString().slice(0,10))pr.streak=(pr.streak||0)+1;
+  else pr.streak=1;
+  pr.lastDate=today;
+  save('progress',pr);
+  render();
+}
+
+// ─── Vocab ───────────────────────────────────────────────────────
+function vocabHTML(){
+  const vs=S.vocab_state;
+  const filtered=S.vocab.filter(v=>vs.filter==='all'?true:v.mastery===parseInt(vs.filter));
+  const masteryColors=['#555b70','#d4884a','var(--yellow)','var(--green)'];
+  const masteryLabels=['未学','学习中','基本掌握','已掌握'];
+
+  const wordsHTML=filtered.length===0?`<div style="text-align:center;padding:48px 0;color:var(--text3)">${S.vocab.length===0?'单词本是空的，从练习中添加生词吧！':'没有该分类的单词'}</div>`:
+    filtered.map(v=>{
+      const m=vs.meanings[v.word];
+      const isLoading=vs.loadingWord===v.word;
+      return`<div class="vocab-card">
+        <div class="vocab-header">
+          <div style="flex:1">
+            <div class="vocab-word">${v.word}</div>
+            <div class="vocab-meta">${v.date}${v.exam?' · '+v.exam.toUpperCase():''}</div>
+          </div>
+          <div class="word-actions">
+            <button class="icon-btn" onclick="lookupVocab('${v.word}')">${isLoading?'…':'查词义'}</button>
+            <button class="icon-btn danger" onclick="deleteVocab('${v.word}')">删除</button>
+          </div>
+        </div>
+        ${m?`<div class="vocab-detail">
+          ${m.phonetic?`<div style="font-size:12px;color:var(--text3);margin-bottom:4px">${m.phonetic} · ${m.partOfSpeech||''}</div>`:''}
+          <div class="vocab-meaning">${m.chineseMeaning}</div>
+          <div class="vocab-example">"${m.example}"</div>
+          ${m.ieltsNote?`<div class="vocab-note">💡 ${m.ieltsNote}</div>`:''}
+        </div>`:''}
+        <div class="mastery-row">
+          <span style="font-size:11px;color:var(--text3);margin-right:4px">掌握：</span>
+          ${masteryLabels.map((lbl,i)=>`<button class="mastery-btn ${v.mastery===i?'active-'+i:''}" onclick="setMastery('${v.word}',${i})">${lbl}</button>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+
+  return`
+    <div class="page-header"><h2>单词本</h2><div class="sub">${S.vocab.length} 个生词</div><div class="accent-line"></div></div>
+    <div class="add-row">
+      <input class="input" id="vocab-input" placeholder="添加生词…" value="${vs.input}" onkeydown="if(event.key==='Enter')addVocabManual()" oninput="S.vocab_state.input=this.value">
+      <button class="btn btn-primary" style="white-space:nowrap" onclick="addVocabManual()">+ 添加</button>
+    </div>
+    <div class="filter-row">
+      ${[['all','全部'],['0','未学'],['1','学习中'],['2','基本掌握'],['3','已掌握']].map(([v,l])=>`<button class="filter-btn ${vs.filter===v?'active':''}" onclick="setVocabFilter('${v}')">${l}</button>`).join('')}
+    </div>
+    ${wordsHTML}`;
+}
+
+function addVocabManual(){
+  const w=S.vocab_state.input.trim().toLowerCase();
+  if(!w||S.vocab.find(v=>v.word===w)){S.vocab_state.input='';render();return}
+  save('vocab',[...S.vocab,{word:w,date:new Date().toISOString().slice(0,10),exam:S.exam,mastery:0}]);
+  S.vocab_state.input='';render();
+}
+
+async function lookupVocab(word){
+  S.vocab_state.loadingWord=word;render();
+  try{
+    const data=await callAPI(`Define the English word "${word}" for an IELTS/考研 student. Respond ONLY in valid JSON no markdown: {"word":"${word}","phonetic":"/ /","partOfSpeech":"noun","chineseMeaning":"中文释义","example":"English example sentence.","ieltsNote":"一句考试提示"}`);
+    S.vocab_state.meanings[word]=data;
+  }catch(e){alert('查询失败：'+e.message)}
+  S.vocab_state.loadingWord=null;render();
+}
+
+function deleteVocab(word){S.vocab_state.meanings[word]&&delete S.vocab_state.meanings[word];save('vocab',S.vocab.filter(v=>v.word!==word));render()}
+function setMastery(word,level){save('vocab',S.vocab.map(v=>v.word===word?{...v,mastery:level}:v));render()}
+function setVocabFilter(f){S.vocab_state.filter=f;render()}
+
+// ─── Wrong ───────────────────────────────────────────────────────
+function wrongHTML(){
+  const ws=S.wrong_state;
+  const filtered=S.wrongQ.filter(w=>ws.filter==='all'?true:w.exam===ws.filter);
+
+  if(ws.reviewing){
+    const q=ws.reviewing;
+    const isC=ws.checked&&ws.answer.trim().toLowerCase()===q.answer.trim().toLowerCase();
+    return`
+      <div class="page-header"><h2>复习错题</h2><div class="sub">${q.topic} · ${q.date}</div><div class="accent-line"></div></div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:12px">📄 ${q.passage}</div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="q-text" style="font-size:15px;margin-bottom:14px">${q.question}</div>
+        ${q.type==='gap'?
+          `<input class="q-input" ${ws.checked?'disabled':''} value="${(ws.answer||'').replace(/"/g,'&quot;')}" placeholder="填入答案…" onkeyup="S.wrong_state.answer=this.value">`:
+          (q.options||[]).map(opt=>{
+            const sel=ws.answer===opt;
+            const optC=ws.checked&&opt.trim().toLowerCase()===q.answer.trim().toLowerCase();
+            return`<label class="q-option ${ws.checked?(optC?'opt-correct':sel&&!optC?'opt-wrong':''):sel?'selected':''}">
+              <input type="radio" name="review" ${sel?'checked':''} ${ws.checked?'disabled':''} onchange="S.wrong_state.answer='${opt.replace(/'/g,"\\'")}';render()"> ${opt}
+            </label>`;
+          }).join('')
+        }
+      </div>
+      ${!ws.checked?
+        `<button class="btn btn-primary btn-block" ${!ws.answer?'disabled':''} onclick="checkReview()">检查答案</button>`:
+        `<div style="text-align:center">
+          <div style="font-size:22px;font-weight:600;color:${isC?'var(--green)':'var(--red)'};margin-bottom:12px">${isC?'✅ 答对了！':`❌ 正确答案：${q.answer}`}</div>
+          <div style="display:flex;gap:10px;justify-content:center">
+            ${isC?`<button class="btn btn-outline" onclick="removeFromWrong()">从错题本移除</button>`:''}
+            <button class="btn btn-outline" onclick="closeReview()">下一题</button>
+          </div>
+        </div>`
+      }
+      <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="closeReview()">← 返回列表</button>`;
+  }
+
+  return`
+    <div class="page-header"><h2>错题本</h2><div class="sub">${S.wrongQ.length} 道错题</div><div class="accent-line"></div></div>
+    <div class="filter-row">
+      ${[['all','全部'],['ielts','IELTS'],['kaoyan','考研']].map(([v,l])=>`<button class="filter-btn ${ws.filter===v?'active':''}" onclick="setWrongFilter('${v}')">${l}</button>`).join('')}
+    </div>
+    ${filtered.length===0?`<div style="text-align:center;padding:48px 0;color:var(--text3)">${S.wrongQ.length===0?'还没有错题，继续练习吧！':'没有该分类的错题'}</div>`:
+      filtered.map((q,i)=>{
+        const idx=S.wrongQ.indexOf(q);
+        return`<div class="card-sm" style="margin-bottom:10px">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">${(q.exam||'').toUpperCase()} · ${q.topic||''} · ${q.date||''}</div>
+          <div style="font-size:14px;color:var(--text2);margin-bottom:6px;line-height:1.6">${q.question}</div>
+          <div style="font-size:12px;color:var(--red);margin-bottom:2px">你的答案：${q.userAnswer||'未作答'}</div>
+          <div style="font-size:12px;color:var(--green);margin-bottom:12px">正确答案：${q.answer}</div>
+          <div style="display:flex;gap:8px">
+            <button class="icon-btn" onclick="startReview(${idx})">复习此题</button>
+            <button class="icon-btn danger" onclick="removeWrong(${idx})">删除</button>
+          </div>
+        </div>`;
+      }).join('')
+    }`;
+}
+
+function setWrongFilter(f){S.wrong_state.filter=f;render()}
+function startReview(i){S.wrong_state={...S.wrong_state,reviewing:S.wrongQ[i],answer:'',checked:false};render()}
+function closeReview(){S.wrong_state.reviewing=null;render()}
+function checkReview(){S.wrong_state.checked=true;render()}
+function removeFromWrong(){const q=S.wrong_state.reviewing;save('wrongQ',S.wrongQ.filter(w=>w!==q));S.wrong_state.reviewing=null;render()}
+function removeWrong(i){save('wrongQ',S.wrongQ.filter((_,j)=>j!==i));render()}
+
+// ─── Progress ────────────────────────────────────────────────────
+function progressHTML(){
+  const pr=S.progress;
+  const days=pr.days||{};
+  const scores=pr.scores||[];
+  const total=Object.values(days).reduce((a,b)=>a+b,0);
+  const totalDays=Object.keys(days).length;
+  const avg=scores.length?Math.round(scores.reduce((a,b)=>a+(b.score/b.total)*100,0)/scores.length):0;
+  const best=scores.length?Math.max(...scores.map(s=>Math.round((s.score/s.total)*100))):0;
+
+  // Calendar: last 35 days
+  const today=new Date();
+  const calDays=Array.from({length:35},(_,i)=>{const d=new Date(today);d.setDate(d.getDate()-(34-i));return d.toISOString().slice(0,10)});
+  const todayStr=today.toISOString().slice(0,10);
+
+  const calHTML=calDays.map(d=>{
+    const cnt=days[d]||0;
+    const isT=d===todayStr;
+    const bg=cnt===0?'var(--bg4)':cnt===1?'#6a3a1566':cnt===2?'#8a4a1888':'var(--amber)';
+    return`<div title="${d}: ${cnt}次" style="aspect-ratio:1;border-radius:4px;background:${bg};border:${isT?'2px solid var(--amber)':'2px solid transparent'};cursor:default"></div>`;
+  }).join('');
+
+  const barHTML=scores.slice(-10).map(s=>{
+    const pct=Math.round((s.score/s.total)*100);
+    const c=pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)';
+    return`<div class="bar-wrap"><div style="flex:1;width:100%;display:flex;align-items:flex-end"><div style="width:100%;height:${pct}%;min-height:4px;background:${c};border-radius:3px 3px 0 0"></div></div><div class="bar-val">${pct}%</div></div>`;
+  }).join('');
+
+  const recentScores=scores.slice(-6).reverse().map(s=>{
+    const pct=Math.round((s.score/s.total)*100);
+    return`<div class="recent-item"><span>${s.topic} <span style="color:var(--text3);font-size:11px">· ${(s.exam||'').toUpperCase()}</span></span><span style="color:${pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)'}">  ${s.score}/${s.total}</span></div>`;
+  }).join('');
+
+  return`
+    <div class="page-header"><h2>学习进度</h2><div class="sub">你的备考数据</div><div class="accent-line"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div style="color:#ff8c42;font-size:18px">🔥</div><div class="val" style="color:#ff8c42">${pr.streak||0}<span style="font-size:14px;color:var(--text3)">天</span></div><div class="lbl">连续打卡</div></div>
+      <div class="stat-card"><div style="color:var(--blue2);font-size:18px">📝</div><div class="val" style="color:var(--blue2)">${total}<span style="font-size:14px;color:var(--text3)">次</span></div><div class="lbl">累计练习</div></div>
+      <div class="stat-card"><div style="color:var(--green);font-size:18px">🎯</div><div class="val" style="color:var(--green)">${avg}<span style="font-size:14px;color:var(--text3)">%</span></div><div class="lbl">平均得分</div></div>
+      <div class="stat-card"><div style="color:var(--yellow);font-size:18px">⭐</div><div class="val" style="color:var(--yellow)">${best}<span style="font-size:14px;color:var(--text3)">%</span></div><div class="lbl">最高单次</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="label">打卡热力图（近5周）</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px">
+        ${['日','一','二','三','四','五','六'].map(d=>`<div style="text-align:center;font-size:10px;color:var(--text3);padding-bottom:4px">${d}</div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">${calHTML}</div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:10px">
+        <span style="font-size:10px;color:var(--text3)">少</span>
+        ${['var(--bg4)','#6a3a1566','#8a4a1888','var(--amber)'].map(c=>`<div style="width:14px;height:14px;border-radius:3px;background:${c}"></div>`).join('')}
+        <span style="font-size:10px;color:var(--text3)">多</span>
+      </div>
+    </div>
+
+    ${scores.length>0?`
+    <div class="card" style="margin-bottom:16px">
+      <div class="label">得分趋势（近${Math.min(scores.length,10)}次）</div>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:90px">${barHTML}</div>
+    </div>
+    <div class="card">
+      <div class="label">最近记录</div>
+      ${recentScores}
+    </div>`:`<div style="text-align:center;padding:40px 0;color:var(--text3)">完成练习后得分记录会显示在这里</div>`}`;
+}
+
+// ─── Bind ─────────────────────────────────────────────────────────
+function bindPage(){}
+
+// ─── Init ─────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
