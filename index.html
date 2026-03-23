@@ -201,6 +201,26 @@ nav svg{width:20px;height:20px}
 .icon-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;color:var(--text2);transition:.15s;white-space:nowrap}
 .icon-btn:hover{border-color:var(--amber);color:var(--amber)}
 .icon-btn.danger:hover{border-color:var(--red);color:var(--red)}
+
+/* Speaking page */
+.speak-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:16px}
+.speak-part-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:12px}
+.speak-question{font-family:'Crimson Pro',serif;font-size:20px;font-weight:600;line-height:1.4;color:var(--text);margin-bottom:16px}
+.speak-timer{font-family:'Crimson Pro',serif;font-size:52px;font-weight:700;line-height:1;text-align:center;margin:8px 0 4px}
+.speak-timer-label{font-size:11px;color:var(--text3);text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.speak-progress{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:20px}
+.speak-progress-bar{height:100%;border-radius:2px;transition:width .5s linear}
+.tip-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6;color:var(--text2)}
+.tip-item:last-child{border-bottom:none}
+.tip-num{color:var(--amber);font-weight:600;flex-shrink:0;width:18px}
+.phrase-chip{display:inline-block;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--amber3);margin:3px;font-style:italic;cursor:pointer;transition:.15s}
+.phrase-chip:hover{border-color:var(--amber);background:var(--amber)11}
+.answer-section{background:#0a0b10;border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:16px}
+.answer-text{font-size:14px;line-height:1.9;color:#c4c0b8}
+.answer-text .highlight{color:var(--amber3);font-weight:500}
+.speak-tabs{display:flex;gap:6px;margin-bottom:20px}
+.speak-tab{flex:1;border:1px solid var(--border2);border-radius:var(--r);padding:9px 6px;font-size:12px;background:transparent;color:var(--text3);cursor:pointer;transition:.15s;text-align:center;font-family:inherit}
+.speak-tab.active{background:var(--amber)22;border-color:var(--amber)66;color:var(--amber)}
 </style>
 </head>
 <body>
@@ -220,6 +240,7 @@ const S = {
   wrong_state: { filter:'all', reviewing:null, answer:'', checked:false },
   popup: { visible:false, word:'', sentence:'', loading:false, data:null, added:false },
   topicIndex: parseInt(localStorage.getItem('topicIndex')||'0'),
+  speaking: { loading:false, data:null, error:'', tab:'question', timerSec:0, timerRunning:false, timerMax:120, showAnswer:false },
 };
 
 function ls(k,v){if(v===undefined){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null}catch{return null}}localStorage.setItem(k,JSON.stringify(v))}
@@ -306,16 +327,16 @@ function navItems(){
   const icons={
     home:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
     practice:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    speaking:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`,
     vocab:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
-    wrong:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
     progress:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`
   };
-  const labels={home:'主页',practice:'练习',vocab:'单词本',wrong:'错题本',progress:'进度'};
+  const labels={home:'主页',practice:'练习',speaking:'口语',vocab:'单词本',progress:'进度'};
   return Object.entries(icons).map(([k,v])=>`<button onclick="nav('${k}')" class="${S.page===k?'active':''}">${v}<span>${labels[k]}</span></button>`).join('');
 }
 
 function pageHTML(){
-  const pages={home:homeHTML,practice:practiceHTML,vocab:vocabHTML,wrong:wrongHTML,progress:progressHTML};
+  const pages={home:homeHTML,practice:practiceHTML,speaking:speakingHTML,vocab:vocabHTML,wrong:wrongHTML,progress:progressHTML};
   return `<div class="page">${(pages[S.page]||homeHTML)()}</div>`;
 }
 
@@ -391,9 +412,9 @@ function homeHTML(){
 
     <div class="label">快速开始</div>
     <div class="action-grid">
-      <button class="action-card" onclick="nav('practice')"><div class="icon">⭐</div><div class="title">今日练习</div><div class="desc">AI生成阅读/听力</div></button>
+      <button class="action-card" onclick="nav('practice')"><div class="icon">⭐</div><div class="title">阅读练习</div><div class="desc">AI生成阅读/听力</div></button>
+      <button class="action-card" onclick="nav('speaking')"><div class="icon">🎙️</div><div class="title">口语练习</div><div class="desc">每日话题卡 + 范文</div></button>
       <button class="action-card" onclick="nav('vocab')"><div class="icon">📖</div><div class="title">单词本</div><div class="desc">已收录 ${S.vocab.length} 个词</div></button>
-      <button class="action-card" onclick="nav('wrong')"><div class="icon">✏️</div><div class="title">错题本</div><div class="desc">${S.wrongQ.length} 题待复习</div></button>
       <button class="action-card" onclick="nav('progress')"><div class="icon">📊</div><div class="title">学习进度</div><div class="desc">累计 ${totalDays} 天</div></button>
     </div>
     ${recentHTML}
@@ -764,6 +785,286 @@ function progressHTML(){
       <div class="label">最近记录</div>
       ${recentScores}
     </div>`:`<div style="text-align:center;padding:40px 0;color:var(--text3)">完成练习后得分记录会显示在这里</div>`}`;
+}
+
+
+// ─── Speaking ────────────────────────────────────────────────────
+const SPEAK_PARTS = {
+  ielts: [
+    { part:'Part 1', color:'#5c88c8', label:'个人问答', prepSec:0, speakSec:60,
+      desc:'回答关于你自己的简短问题，每题30-45秒' },
+    { part:'Part 2', color:'#c89256', label:'独立陈述', prepSec:60, speakSec:120,
+      desc:'准备1分钟，然后连续说1-2分钟' },
+    { part:'Part 3', color:'#5aaa78', label:'深度讨论', prepSec:0, speakSec:120,
+      desc:'围绕Part 2话题展开讨论，表达观点' },
+  ],
+  kaoyan: [
+    { part:'情景对话', color:'#5c88c8', label:'Situational Dialogue', prepSec:30, speakSec:90,
+      desc:'根据情景提示进行角色对话' },
+    { part:'主题演讲', color:'#c89256', label:'Topic Speech', prepSec:60, speakSec:120,
+      desc:'就给定主题发表2分钟演讲' },
+  ]
+};
+
+const SPEAK_PROMPT = (exam, part, topic) => {
+  const isIELTS = exam === 'ielts';
+  return `You are an ${isIELTS ? 'IELTS examiner' : '考研英语 speaking coach'}. Generate a speaking practice card for ${part} on topic "${topic}".
+
+Return ONLY valid JSON, no markdown:
+{
+  "topic": "${topic}",
+  "part": "${part}",
+  "question": "The main speaking question or cue card prompt (2-4 sentences). For IELTS Part 2, format as a cue card with bullet points using \\n• format.",
+  "followUps": ["follow-up question 1", "follow-up question 2", "follow-up question 3"],
+  "keyPhrases": ["useful phrase 1", "useful phrase 2", "useful phrase 3", "useful phrase 4", "useful phrase 5", "useful phrase 6"],
+  "sampleAnswer": "A natural, fluent sample answer of 150-200 words. Use varied vocabulary and natural connectors. Mark 4-6 key advanced phrases by wrapping them in ||double bars|| like this: ||in terms of|| or ||it goes without saying that||.",
+  "tips": ["Specific tip 1 in Chinese for this question type", "Tip 2 in Chinese", "Tip 3 in Chinese"]
+}`;
+};
+
+let speakTimer = null;
+
+function speakingHTML() {
+  const sp = S.speaking;
+  const cfg = EXAMS[S.exam];
+  const parts = SPEAK_PARTS[S.exam] || SPEAK_PARTS.ielts;
+  const selectedPart = parts[sp.partIndex || 0];
+  const topics = cfg.topics;
+  const topic = topics[S.topicIndex % topics.length];
+
+  if (sp.loading) return `<div class="loader"><div class="spinner"></div><p>AI 正在生成口语题卡…</p></div>`;
+
+  if (!sp.data) {
+    return `
+    <div class="page-header"><h2>口语练习</h2><div class="sub">${cfg.label} · 今日话题：<span style="color:var(--amber)">${topic}</span></div><div class="accent-line"></div></div>
+
+    <div class="hint">🎙️ 选择练习类型，AI生成题卡 + 参考范文 + 计时器，用来做跟读和自我练习</div>
+
+    <div class="label">选择练习部分</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      ${parts.map((p, i) => `
+        <button onclick="S.speaking.partIndex=${i};render()" style="background:${(sp.partIndex||0)===i?p.color+'22':'var(--bg2)'};border:1px solid ${(sp.partIndex||0)===i?p.color+'88':'var(--border)'};border-radius:var(--r2);padding:16px;text-align:left;cursor:pointer;color:inherit;font-family:inherit;transition:.2s">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <span style="background:${p.color}33;color:${p.color};border-radius:6px;padding:2px 10px;font-size:11px;font-weight:600">${p.part}</span>
+            <span style="font-size:14px;font-weight:600;color:var(--text)">${p.label}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text3)">${p.desc}${p.prepSec?` · 准备${p.prepSec}秒`:''} · 作答${p.speakSec}秒</div>
+        </button>`).join('')}
+    </div>
+
+    <button class="btn btn-primary btn-block" style="font-size:15px;padding:15px" onclick="generateSpeaking('${topic}')">
+      ✨ 生成口语题卡
+    </button>
+    ${sp.error ? `<div class="error-box" style="margin-top:12px">${sp.error}</div>` : ''}`;
+  }
+
+  // Has data - show the card
+  const d = sp.data;
+  const part = parts[sp.partIndex || 0];
+  const tab = sp.tab || 'question';
+
+  // Format sample answer - highlight ||phrases||
+  const formattedAnswer = d.sampleAnswer
+    ? d.sampleAnswer.replace(/\|\|([^|]+)\|\|/g, '<span class="highlight">$1</span>')
+    : '';
+
+  // Format question - handle \n• bullets
+  const formattedQ = d.question
+    ? d.question.replace(/\\n•/g, '<br>•').replace(/\n•/g, '<br>•')
+    : '';
+
+  // Timer display
+  const timerSec = sp.timerSec || 0;
+  const isPrep = sp.timerPhase === 'prep';
+  const maxSec = isPrep ? part.prepSec : part.speakSec;
+  const pct = maxSec > 0 ? Math.min(100, (timerSec / maxSec) * 100) : 0;
+  const timerColor = pct > 85 ? 'var(--red)' : pct > 60 ? 'var(--yellow)' : 'var(--green)';
+  const mm = String(Math.floor(timerSec / 60)).padStart(2, '0');
+  const ss = String(timerSec % 60).padStart(2, '0');
+
+  return `
+    <div class="page-header">
+      <h2>${d.topic}</h2>
+      <div class="sub">${cfg.label} · <span style="color:${part.color}">${part.part} ${part.label}</span></div>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="speak-tabs">
+      ${[['question','📋 题目'],['timer','⏱ 计时'],['answer','📝 范文'],['tips','💡 技巧']].map(([k,l])=>
+        `<button class="speak-tab ${tab===k?'active':''}" onclick="S.speaking.tab='${k}';render()">${l}</button>`
+      ).join('')}
+    </div>
+
+    ${tab === 'question' ? `
+      <div class="speak-card" style="padding:20px">
+        <span class="speak-part-badge" style="background:${part.color}22;color:${part.color}">${part.part} · ${part.label}</span>
+        <div class="speak-question">${formattedQ}</div>
+        ${d.followUps && d.followUps.length ? `
+          <div class="label" style="margin-bottom:8px">可能的追问</div>
+          ${d.followUps.map(q=>`<div style="font-size:13px;color:var(--text3);padding:6px 0;border-bottom:1px solid var(--border)">• ${q}</div>`).join('')}
+        ` : ''}
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="label" style="margin-bottom:10px">高分短语（点击复制）</div>
+        <div>${(d.keyPhrases||[]).map(p=>`<span class="phrase-chip" onclick="copyPhrase('${p.replace(/'/g,"\\'")}',this)">${p}</span>`).join('')}</div>
+      </div>
+    ` : ''}
+
+    ${tab === 'timer' ? `
+      <div class="card" style="text-align:center;padding:28px 20px;margin-bottom:16px">
+        ${part.prepSec > 0 ? `
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">
+            <button onclick="startTimer('prep')" style="flex:1;background:${sp.timerPhase==='prep'?'#1a2a3a':'var(--bg3)'};border:1px solid ${sp.timerPhase==='prep'?'var(--blue)':'var(--border2)'};border-radius:var(--r);padding:8px;color:${sp.timerPhase==='prep'?'var(--blue2)':'var(--text3)'};cursor:pointer;font-family:inherit;font-size:12px">
+              准备阶段 ${part.prepSec}s
+            </button>
+            <button onclick="startTimer('speak')" style="flex:1;background:${sp.timerPhase==='speak'?'#1a2a1a':'var(--bg3)'};border:1px solid ${sp.timerPhase==='speak'?'var(--green)':'var(--border2)'};border-radius:var(--r);padding:8px;color:${sp.timerPhase==='speak'?'var(--green)':'var(--text3)'};cursor:pointer;font-family:inherit;font-size:12px">
+              作答阶段 ${part.speakSec}s
+            </button>
+          </div>` : ''}
+        <div class="speak-timer" style="color:${timerColor}">${mm}:${ss}</div>
+        <div class="speak-timer-label">${isPrep ? '准备时间' : '作答时间'} / ${String(Math.floor(maxSec/60)).padStart(2,'0')}:${String(maxSec%60).padStart(2,'0')}</div>
+        <div class="speak-progress"><div class="speak-progress-bar" style="width:${pct}%;background:${timerColor}"></div></div>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="btn btn-primary" style="min-width:100px" onclick="${sp.timerRunning?'pauseTimer()':'resumeTimer()'}">
+            ${sp.timerRunning ? '⏸ 暂停' : timerSec>0?'▶ 继续':'▶ 开始'}
+          </button>
+          <button class="btn btn-outline" onclick="resetTimer()">↺ 重置</button>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-top:16px;line-height:1.6">
+          建议流程：看题目 → 开始准备计时 → 开始作答计时 → 录音回听
+        </div>
+      </div>
+    ` : ''}
+
+    ${tab === 'answer' ? `
+      <div class="hint">📖 阅读范文，注意<span style="color:var(--amber3)">高亮短语</span>的使用方式，然后尝试跟读或模仿</div>
+      <div class="answer-section">
+        <div class="answer-text">${formattedAnswer}</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="label" style="margin-bottom:10px">文中高分短语</div>
+        <div>${(d.keyPhrases||[]).map(p=>`<span class="phrase-chip" onclick="copyPhrase('${p.replace(/'/g,"\\'")}',this)">${p}</span>`).join('')}</div>
+      </div>
+    ` : ''}
+
+    ${tab === 'tips' ? `
+      <div class="card" style="margin-bottom:16px">
+        <div class="label" style="margin-bottom:4px">针对本题的备考提示</div>
+        ${(d.tips||[]).map((t,i)=>`<div class="tip-item"><span class="tip-num">${i+1}</span><span>${t}</span></div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="label" style="margin-bottom:10px">通用口语提升方法</div>
+        ${['跟读 Shadowing：跟着范文录音同步模仿，连语调和停顿都要模仿','录音回听：把自己说的录下来，和范文对比发现问题','自言自语：每天用英语描述你在做的事，逼大脑实时组织语言','计时练习：用计时器给自己压力，训练在规定时间内组织完整答案'].map((t,i)=>`<div class="tip-item"><span class="tip-num">${['①','②','③','④'][i]}</span><span style="color:var(--text2)">${t}</span></div>`).join('')}
+      </div>
+    ` : ''}
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="generateSpeaking('${d.topic}')">🔄 换一道题</button>
+      <button class="btn btn-outline" onclick="resetSpeaking()">← 返回</button>
+    </div>`;
+}
+
+async function generateSpeaking(topic) {
+  clearInterval(speakTimer);
+  const parts = SPEAK_PARTS[S.exam] || SPEAK_PARTS.ielts;
+  const part = parts[S.speaking.partIndex || 0];
+  S.speaking = { ...S.speaking, loading: true, data: null, error: '', tab: 'question', timerSec: 0, timerRunning: false, timerPhase: 'speak', showAnswer: false };
+  render();
+  try {
+    const data = await callAPI(SPEAK_PROMPT(S.exam, part.part + ' ' + part.label, topic));
+    S.speaking.data = data;
+    S.speaking.loading = false;
+  } catch(e) {
+    S.speaking.loading = false;
+    S.speaking.error = '生成失败：' + e.message;
+  }
+  render();
+}
+
+function resetSpeaking() {
+  clearInterval(speakTimer);
+  S.speaking = { loading: false, data: null, error: '', tab: 'question', timerSec: 0, timerRunning: false, timerMax: 120, showAnswer: false, partIndex: S.speaking.partIndex || 0 };
+  render();
+}
+
+function startTimer(phase) {
+  clearInterval(speakTimer);
+  const parts = SPEAK_PARTS[S.exam] || SPEAK_PARTS.ielts;
+  const part = parts[S.speaking.partIndex || 0];
+  S.speaking.timerPhase = phase;
+  S.speaking.timerSec = 0;
+  S.speaking.timerRunning = true;
+  S.speaking.timerMax = phase === 'prep' ? part.prepSec : part.speakSec;
+  render();
+  speakTimer = setInterval(() => {
+    S.speaking.timerSec++;
+    if (S.speaking.timerSec >= S.speaking.timerMax) {
+      clearInterval(speakTimer);
+      S.speaking.timerRunning = false;
+    }
+    // Update only timer display without full re-render for smoothness
+    const t = document.querySelector('.speak-timer');
+    const pb = document.querySelector('.speak-progress-bar');
+    if (t) {
+      const sec = S.speaking.timerSec;
+      const pct = Math.min(100, (sec / S.speaking.timerMax) * 100);
+      const color = pct > 85 ? 'var(--red)' : pct > 60 ? 'var(--yellow)' : 'var(--green)';
+      const mm = String(Math.floor(sec/60)).padStart(2,'0');
+      const ss = String(sec%60).padStart(2,'0');
+      t.textContent = mm + ':' + ss;
+      t.style.color = color;
+      if (pb) { pb.style.width = pct + '%'; pb.style.background = color; }
+    }
+    if (!S.speaking.timerRunning) render();
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(speakTimer);
+  S.speaking.timerRunning = false;
+  render();
+}
+
+function resumeTimer() {
+  if (S.speaking.timerSec === 0) {
+    startTimer(S.speaking.timerPhase || 'speak');
+    return;
+  }
+  S.speaking.timerRunning = true;
+  render();
+  speakTimer = setInterval(() => {
+    S.speaking.timerSec++;
+    if (S.speaking.timerSec >= S.speaking.timerMax) {
+      clearInterval(speakTimer);
+      S.speaking.timerRunning = false;
+    }
+    const t = document.querySelector('.speak-timer');
+    const pb = document.querySelector('.speak-progress-bar');
+    if (t) {
+      const sec = S.speaking.timerSec;
+      const pct = Math.min(100, (sec / S.speaking.timerMax) * 100);
+      const color = pct > 85 ? 'var(--red)' : pct > 60 ? 'var(--yellow)' : 'var(--green)';
+      t.textContent = String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+      t.style.color = color;
+      if (pb) { pb.style.width = pct + '%'; pb.style.background = color; }
+    }
+    if (!S.speaking.timerRunning) render();
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(speakTimer);
+  S.speaking.timerSec = 0;
+  S.speaking.timerRunning = false;
+  render();
+}
+
+function copyPhrase(phrase, el) {
+  navigator.clipboard.writeText(phrase).catch(()=>{});
+  const orig = el.textContent;
+  el.textContent = '✓ 已复制';
+  el.style.color = 'var(--green)';
+  setTimeout(() => { el.textContent = orig; el.style.color = ''; }, 1500);
 }
 
 // ─── Bind ─────────────────────────────────────────────────────────
