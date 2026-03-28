@@ -221,6 +221,96 @@ nav svg{width:20px;height:20px}
 .speak-tabs{display:flex;gap:6px;margin-bottom:20px}
 .speak-tab{flex:1;border:1px solid var(--border2);border-radius:var(--r);padding:9px 6px;font-size:12px;background:transparent;color:var(--text3);cursor:pointer;transition:.15s;text-align:center;font-family:inherit}
 .speak-tab.active{background:var(--amber)22;border-color:var(--amber)66;color:var(--amber)}
+
+/* ── Exam module (light theme) ─────────────────────────── */
+body.exam-mode { background:#f0f2f5 }
+body.exam-mode #app { max-width:100%; padding-bottom:0 }
+body.exam-mode .page { padding:0; animation:none }
+
+.exam-shell { display:flex; flex-direction:column; height:100vh; background:#f0f2f5; font-family:'DM Sans',sans-serif }
+
+/* Top bar */
+.exam-topbar { background:#fff; border-bottom:1px solid #e0e4e8; display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:52px; flex-shrink:0; gap:12px }
+.exam-topbar-left { display:flex; align-items:center; gap:12px }
+.exam-logo { width:32px; height:32px; background:#2e7d52; border-radius:8px; display:flex; align-items:center; justify-content:center }
+.exam-logo svg { width:18px; height:18px; stroke:#fff; fill:none }
+.exam-timer { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:#1a1a2e }
+.exam-timer svg { width:16px; height:16px; stroke:#2e7d52; fill:none }
+.exam-timer-warn { color:#d96868 }
+.exam-btn-submit { background:#2e7d52; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; font-family:inherit }
+.exam-btn-submit:hover { background:#245f3e }
+.exam-btn-back { background:none; border:1px solid #d0d4da; border-radius:8px; padding:8px 14px; font-size:13px; color:#555; cursor:pointer; font-family:inherit }
+.exam-btn-back:hover { border-color:#2e7d52; color:#2e7d52 }
+
+/* Split body */
+.exam-body { display:flex; flex:1; overflow:hidden; gap:0 }
+
+/* Left passage */
+.exam-passage-panel { flex:1; overflow-y:auto; background:#fff; border-right:1px solid #e0e4e8 }
+.exam-passage-header { background:#2e7d52; color:#fff; padding:14px 20px 12px }
+.exam-passage-header .part-label { font-size:11px; font-weight:700; letter-spacing:2px; opacity:.85; text-transform:uppercase; margin-bottom:2px }
+.exam-passage-header .passage-title { font-size:17px; font-weight:700 }
+.exam-passage-content { padding:20px; font-size:14px; line-height:1.85; color:#1a1a2e }
+.exam-passage-content .para-label { font-weight:700; color:#1a1a2e; margin-right:4px }
+.exam-passage-content p { margin-bottom:14px }
+
+/* Right questions */
+.exam-q-panel { width:420px; flex-shrink:0; overflow-y:auto; background:#f8f9fb; display:flex; flex-direction:column }
+.exam-q-header { padding:14px 18px 10px; background:#fff; border-bottom:1px solid #e8ecf0; flex-shrink:0 }
+.exam-q-header h3 { font-size:15px; font-weight:700; color:#1a1a2e; margin-bottom:4px }
+.exam-q-header .q-range { font-size:12px; color:#6b7280; font-style:italic }
+.exam-q-header .q-instruction { font-size:13px; color:#374151; margin-top:8px; line-height:1.5 }
+.exam-q-header .q-limit { color:#dc2626; font-weight:700 }
+.exam-q-body { padding:14px 18px; flex:1 }
+
+/* Question types */
+.exam-q-item { margin-bottom:16px }
+.exam-q-num { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#2e7d52; color:#fff; border-radius:50%; font-size:12px; font-weight:700; margin-right:8px; flex-shrink:0 }
+.exam-q-num.answered { background:#1a5c38 }
+.exam-q-num.wrong { background:#dc2626 }
+.exam-q-text { font-size:13.5px; color:#1a1a2e; line-height:1.6; display:flex; align-items:flex-start; gap:0; margin-bottom:8px }
+.exam-q-select { width:100%; border:1.5px solid #d0d4da; border-radius:8px; padding:8px 12px; font-size:13px; background:#fff; color:#1a1a2e; font-family:inherit; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center }
+.exam-q-select:focus { border-color:#2e7d52; outline:none }
+.exam-q-select.answered { border-color:#2e7d52; background-color:#f0faf4 }
+.exam-q-input { width:100%; border:1.5px solid #d0d4da; border-radius:8px; padding:8px 12px; font-size:13px; background:#fff; color:#1a1a2e; font-family:inherit }
+.exam-q-input:focus { border-color:#2e7d52; outline:none }
+.exam-q-input.answered { border-color:#2e7d52; background:#f0faf4 }
+.exam-radio-group { display:flex; flex-direction:column; gap:6px; margin-top:4px }
+.exam-radio-opt { display:flex; align-items:center; gap:8px; padding:8px 12px; border:1.5px solid #e0e4e8; border-radius:8px; cursor:pointer; font-size:13px; color:#374151; background:#fff; transition:.15s }
+.exam-radio-opt:hover { border-color:#2e7d52; background:#f0faf4 }
+.exam-radio-opt.selected { border-color:#2e7d52; background:#f0faf4; color:#1a5c38; font-weight:500 }
+.exam-radio-opt.correct { border-color:#2e7d52; background:#d1fae5; color:#065f46 }
+.exam-radio-opt.incorrect { border-color:#dc2626; background:#fee2e2; color:#991b1b }
+.exam-q-feedback { font-size:12px; margin-top:6px; padding:6px 10px; border-radius:6px }
+.exam-q-feedback.correct { background:#d1fae5; color:#065f46 }
+.exam-q-feedback.incorrect { background:#fee2e2; color:#991b1b }
+.exam-section-divider { margin:20px 0 14px; padding-bottom:8px; border-bottom:2px solid #e0e4e8 }
+.exam-section-divider h4 { font-size:14px; font-weight:700; color:#1a1a2e; margin-bottom:2px }
+.exam-section-divider p { font-size:12px; color:#6b7280; font-style:italic }
+.exam-section-divider .limit { color:#dc2626; font-weight:700 }
+
+/* Bottom part nav */
+.exam-bottom { background:#fff; border-top:2px solid #e0e4e8; display:flex; align-items:center; padding:0 16px; height:54px; gap:8px; flex-shrink:0; overflow-x:auto }
+.exam-part-btn { padding:6px 14px; border-radius:6px; font-size:12px; font-weight:600; border:1.5px solid #d0d4da; background:#fff; color:#6b7280; cursor:pointer; white-space:nowrap; font-family:inherit }
+.exam-part-btn.active { background:#2e7d52; border-color:#2e7d52; color:#fff }
+.exam-q-nums { display:flex; gap:4px; margin-left:8px; flex-wrap:nowrap }
+.exam-q-dot { width:26px; height:26px; border-radius:4px; border:1.5px solid #d0d4da; background:#fff; font-size:11px; font-weight:600; color:#6b7280; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; flex-shrink:0 }
+.exam-q-dot.answered { background:#2e7d52; border-color:#2e7d52; color:#fff }
+.exam-q-dot.current { border-color:#2e7d52; color:#2e7d52 }
+
+/* Score modal */
+.exam-score-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:300; padding:20px }
+.exam-score-card { background:#fff; border-radius:16px; padding:32px; max-width:420px; width:100%; text-align:center }
+.exam-score-big { font-family:'Crimson Pro',serif; font-size:72px; font-weight:700; line-height:1 }
+.exam-score-band { display:inline-block; background:#2e7d5222; color:#1a5c38; font-size:14px; font-weight:700; padding:4px 14px; border-radius:20px; margin:8px 0 16px }
+
+/* Mobile responsive */
+@media(max-width:680px){
+  .exam-body { flex-direction:column }
+  .exam-passage-panel { flex:none; height:45vh; border-right:none; border-bottom:1px solid #e0e4e8 }
+  .exam-q-panel { width:100%; height:55vh }
+}
+
 </style>
 </head>
 <body>
@@ -240,6 +330,7 @@ const S = {
   wrong_state: { filter:'all', reviewing:null, answer:'', checked:false },
   popup: { visible:false, word:'', sentence:'', loading:false, data:null, added:false },
   topicIndex: parseInt(localStorage.getItem('topicIndex')||'0'),
+  exam: { loading:false, data:null, error:'', part:0, answers:{}, submitted:false, timerSec:3600, timerRunning:false, showScore:false },
   speaking: { loading:false, data:null, error:'', tab:'question', timerSec:0, timerRunning:false, timerMax:120, showAnswer:false },
 };
 
@@ -318,7 +409,13 @@ function popupHTML(){
 // ─── Render ───────────────────────────────────────────────────────
 function render(){
   const app=document.getElementById('app');
-  if(!S.apiKey){app.innerHTML=setupHTML();bindSetup();return}
+  if(!S.apiKey){document.body.classList.remove('exam-mode');app.innerHTML=setupHTML();bindSetup();return}
+  if(S.page==='exampage'&&S.exam.data){
+    document.body.classList.add('exam-mode');
+    app.innerHTML=exampageHTML();
+    return;
+  }
+  document.body.classList.remove('exam-mode');
   app.innerHTML=`${pageHTML()}${popupHTML()}<nav>${navItems()}</nav>`;
   bindPage();
 }
@@ -328,15 +425,16 @@ function navItems(){
     home:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
     practice:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
     speaking:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`,
+    exampage:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
     vocab:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
     progress:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`
   };
-  const labels={home:'主页',practice:'练习',speaking:'口语',vocab:'单词本',progress:'进度'};
+  const labels={home:'主页',practice:'练习',speaking:'口语',exampage:'真题',vocab:'单词本',progress:'进度'};
   return Object.entries(icons).map(([k,v])=>`<button onclick="nav('${k}')" class="${S.page===k?'active':''}">${v}<span>${labels[k]}</span></button>`).join('');
 }
 
 function pageHTML(){
-  const pages={home:homeHTML,practice:practiceHTML,speaking:speakingHTML,vocab:vocabHTML,wrong:wrongHTML,progress:progressHTML};
+  const pages={home:homeHTML,practice:practiceHTML,speaking:speakingHTML,exampage:exampageHTML,vocab:vocabHTML,wrong:wrongHTML,progress:progressHTML};
   return `<div class="page">${(pages[S.page]||homeHTML)()}</div>`;
 }
 
@@ -412,7 +510,7 @@ function homeHTML(){
 
     <div class="label">快速开始</div>
     <div class="action-grid">
-      <button class="action-card" onclick="nav('practice')"><div class="icon">⭐</div><div class="title">阅读练习</div><div class="desc">AI生成阅读/听力</div></button>
+      <button class="action-card" onclick="nav('exampage')"><div class="icon">📄</div><div class="title">模拟真题</div><div class="desc">左文右题分屏练习</div></button>
       <button class="action-card" onclick="nav('speaking')"><div class="icon">🎙️</div><div class="title">口语练习</div><div class="desc">每日话题卡 + 范文</div></button>
       <button class="action-card" onclick="nav('vocab')"><div class="icon">📖</div><div class="title">单词本</div><div class="desc">已收录 ${S.vocab.length} 个词</div></button>
       <button class="action-card" onclick="nav('progress')"><div class="icon">📊</div><div class="title">学习进度</div><div class="desc">累计 ${totalDays} 天</div></button>
@@ -1067,6 +1165,368 @@ function copyPhrase(phrase, el) {
   setTimeout(() => { el.textContent = orig; el.style.color = ''; }, 1500);
 }
 
+
+// ─── Exam Page ────────────────────────────────────────────────────
+const EXAM_TOPICS = [
+  'Technology & Society','Environment & Climate','Health & Medicine',
+  'Education & Learning','Business & Economics','Culture & Arts',
+  'Science & Discovery','Urban Development','Food & Agriculture','Travel & Migration'
+];
+
+const EXAM_PROMPT = (topic, part) => `You are an IELTS Academic Reading examiner. Generate a complete Reading passage for Part ${part} on the topic "${topic}".
+
+Requirements:
+- Part ${part===1?'1: 500-600 words, General interest, moderate difficulty':part===2?'2: 650-750 words, Work/education related, harder':'3: 750-900 words, Academic/scientific, hardest'}
+- Divide into exactly 5 paragraphs labeled A through E
+- After the passage, create exactly 13 questions in 3 groups:
+
+Group 1 (Q1-4): Paragraph matching - "Which paragraph contains each piece of information?" - 4 questions, answer is one of A/B/C/D/E
+Group 2 (Q5-9): Sentence completion - "Complete the sentences using NO MORE THAN THREE WORDS from the text" - 5 questions, each has a sentence with a blank ___, answer is exact words from passage
+Group 3 (Q10-13): True/False/Not Given - 4 statements, answer is True/False/Not Given
+
+Return ONLY valid JSON, no markdown:
+{
+  "title": "passage title",
+  "paragraphs": [
+    {"label":"A","text":"paragraph text..."},
+    {"label":"B","text":"..."},
+    {"label":"C","text":"..."},
+    {"label":"D","text":"..."},
+    {"label":"E","text":"..."}
+  ],
+  "groups": [
+    {
+      "type":"matching",
+      "instruction":"Which paragraph contains each of the following pieces of information?",
+      "questions":[
+        {"id":1,"text":"description of information","answer":"B"},
+        {"id":2,"text":"description of information","answer":"A"},
+        {"id":3,"text":"description of information","answer":"D"},
+        {"id":4,"text":"description of information","answer":"C"}
+      ]
+    },
+    {
+      "type":"completion",
+      "instruction":"Complete the following sentences using NO MORE THAN THREE WORDS from the text for each gap.",
+      "limit":"NO MORE THAN THREE WORDS",
+      "questions":[
+        {"id":5,"text":"The ___ was first developed in the early twentieth century.","answer":"exact phrase"},
+        {"id":6,"text":"Scientists discovered that ___ could reduce energy consumption significantly.","answer":"exact phrase"},
+        {"id":7,"text":"The report concluded that ___ had the greatest impact on local communities.","answer":"exact phrase"},
+        {"id":8,"text":"One major challenge is the ___ of implementing new technology.","answer":"exact phrase"},
+        {"id":9,"text":"The study found that ___ increased by nearly forty percent.","answer":"exact phrase"}
+      ]
+    },
+    {
+      "type":"tfng",
+      "instruction":"Do the following statements agree with the information in the passage? Write TRUE, FALSE, or NOT GIVEN.",
+      "questions":[
+        {"id":10,"text":"statement to evaluate","answer":"True"},
+        {"id":11,"text":"statement to evaluate","answer":"False"},
+        {"id":12,"text":"statement to evaluate","answer":"Not Given"},
+        {"id":13,"text":"statement to evaluate","answer":"True"}
+      ]
+    }
+  ]
+}`;
+
+let examTimer = null;
+
+function exampageHTML() {
+  const ex = S.exam;
+
+  // Setup screen (no data yet)
+  if (!ex.data && !ex.loading) {
+    const topicIdx = S.topicIndex % EXAM_TOPICS.length;
+    return `<div style="min-height:100vh;background:#f0f2f5;font-family:'DM Sans',sans-serif">
+      <div style="background:#2e7d52;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px">
+        <div class="exam-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div>
+          <div style="font-size:11px;letter-spacing:2px;opacity:.8;text-transform:uppercase">IELTS Academic</div>
+          <div style="font-size:18px;font-weight:700">模拟真题练习</div>
+        </div>
+      </div>
+      <div style="max-width:560px;margin:40px auto;padding:0 20px">
+        <div style="background:#fff;border-radius:16px;border:1px solid #e0e4e8;padding:28px;margin-bottom:16px">
+          <div style="font-size:11px;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:8px">今日话题</div>
+          <div style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:6px">${EXAM_TOPICS[topicIdx]}</div>
+          <div style="font-size:13px;color:#6b7280;margin-bottom:20px">AI生成与真实雅思相同难度和格式的阅读文章 + 13道配套题目</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+            ${[1,2,3].map(p=>`
+              <button onclick="startExam(${p})" style="background:#f8fafb;border:1.5px solid #e0e4e8;border-radius:10px;padding:14px 16px;text-align:left;cursor:pointer;font-family:inherit;transition:.15s" onmouseover="this.style.borderColor='#2e7d52'" onmouseout="this.style.borderColor='#e0e4e8'">
+                <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px">Part ${p} <span style="background:#2e7d5222;color:#1a5c38;border-radius:4px;padding:2px 8px;font-size:11px;margin-left:6px">${p===1?'较易':p===2?'中等':'较难'}</span></div>
+                <div style="font-size:12px;color:#6b7280">${p===1?'500-600词 · 一般性话题':p===2?'650-750词 · 工作/教育相关':'750-900词 · 学术/科研文章'} · 13题 · 建议20分钟</div>
+              </button>`).join('')}
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:12px;border:1px solid #e0e4e8;padding:16px">
+          <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:8px">📋 题型说明</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#6b7280">
+            <div>Q1-4 · 段落匹配：每题选一个段落 (A-E)</div>
+            <div>Q5-9 · 句子填空：不超过三个单词填入空白</div>
+            <div>Q10-13 · 判断题：True / False / Not Given</div>
+          </div>
+        </div>
+        <button onclick="nav('home')" style="margin-top:16px;width:100%;background:none;border:1px solid #d0d4da;border-radius:10px;padding:12px;color:#6b7280;cursor:pointer;font-family:inherit;font-size:14px">← 返回主页</button>
+      </div>
+    </div>`;
+  }
+
+  if (ex.loading) return `<div style="min-height:100vh;background:#f0f2f5;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+    <div class="spinner" style="border-color:#e0e4e8;border-top-color:#2e7d52;width:44px;height:44px;border-width:3px"></div>
+    <div style="color:#374151;font-size:15px">AI 正在生成真题文章和题目…</div>
+    <div style="color:#9ca3af;font-size:13px">通常需要15-25秒</div>
+  </div>`;
+
+  if (ex.error) return `<div style="min-height:100vh;background:#f0f2f5;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#fff;border-radius:12px;padding:28px;text-align:center;max-width:400px">
+      <div style="color:#dc2626;font-size:15px;margin-bottom:16px">${ex.error}</div>
+      <button onclick="S.exam.error='';S.exam.loading=false;render()" style="background:#2e7d52;color:#fff;border:none;border-radius:8px;padding:12px 24px;cursor:pointer;font-family:inherit">重试</button>
+    </div>
+  </div>`;
+
+  const data = ex.data;
+  const part = ex.part;
+  const partData = data.parts[part];
+  if (!partData) return '';
+
+  // Timer
+  const mm = String(Math.floor(ex.timerSec/60)).padStart(2,'0');
+  const ss = String(ex.timerSec%60).padStart(2,'0');
+  const timerWarn = ex.timerSec < 300;
+
+  // Count answered in current part
+  const partQIds = partData.groups.flatMap(g=>g.questions.map(q=>q.id));
+  const answeredCount = partQIds.filter(id=>ex.answers[part+'_'+id]!==undefined&&ex.answers[part+'_'+id]!=='').length;
+
+  // Build passage HTML
+  const passageHTML = partData.paragraphs.map(p=>`
+    <p><span class="para-label">${p.label}.</span>${p.text}</p>`).join('');
+
+  // Build questions HTML
+  const qHTML = partData.groups.map((grp,gi) => {
+    const qItems = grp.questions.map(q => {
+      const key = part+'_'+q.id;
+      const val = ex.answers[key]||'';
+      const isAnswered = val !== '';
+      const isCorrect = ex.submitted && val.trim().toLowerCase()===q.answer.trim().toLowerCase();
+      const isWrong = ex.submitted && isAnswered && !isCorrect;
+
+      if (grp.type === 'matching') {
+        return `<div class="exam-q-item">
+          <div class="exam-q-text">
+            <span class="exam-q-num ${ex.submitted?(isCorrect?'answered':isWrong?'wrong':''):(isAnswered?'answered':'')}">${q.id}</span>
+            <span style="flex:1">${q.text}</span>
+          </div>
+          <select class="exam-q-select ${isAnswered?'answered':''}" ${ex.submitted?'disabled':''} onchange="setExamAnswer('${key}',this.value)">
+            <option value="">-- Select --</option>
+            ${['A','B','C','D','E'].map(l=>`<option value="${l}" ${val===l?'selected':''}>${l}</option>`).join('')}
+          </select>
+          ${ex.submitted?`<div class="exam-q-feedback ${isCorrect?'correct':'incorrect'}">${isCorrect?'✓ Correct':'✗ Answer: '+q.answer}</div>`:''}
+        </div>`;
+      }
+
+      if (grp.type === 'completion') {
+        const parts2 = q.text.split('___');
+        return `<div class="exam-q-item">
+          <div class="exam-q-text" style="flex-wrap:wrap;align-items:baseline">
+            <span class="exam-q-num ${ex.submitted?(isCorrect?'answered':isWrong?'wrong':''):(isAnswered?'answered':'')}">${q.id}</span>
+            <span>${parts2[0]}<input class="exam-q-input ${isAnswered?'answered':''}" style="width:140px;display:inline-block;margin:0 4px;padding:4px 8px;font-size:13px" ${ex.submitted?'disabled':''} value="${val.replace(/"/g,'&quot;')}" placeholder="..." onchange="setExamAnswer('${key}',this.value)" onkeyup="setExamAnswer('${key}',this.value)">${parts2[1]||''}</span>
+          </div>
+          ${ex.submitted?`<div class="exam-q-feedback ${isCorrect?'correct':'incorrect'}" style="margin-left:32px">${isCorrect?'✓ Correct':'✗ Answer: '+q.answer}</div>`:''}
+        </div>`;
+      }
+
+      if (grp.type === 'tfng') {
+        return `<div class="exam-q-item">
+          <div class="exam-q-text">
+            <span class="exam-q-num ${ex.submitted?(isCorrect?'answered':isWrong?'wrong':''):(isAnswered?'answered':'')}">${q.id}</span>
+            <span style="flex:1">${q.text}</span>
+          </div>
+          <div class="exam-radio-group">
+            ${['True','False','Not Given'].map(opt=>{
+              const sel = val===opt;
+              const optCorrect = ex.submitted && opt.toLowerCase()===q.answer.toLowerCase();
+              const optWrong = ex.submitted && sel && !optCorrect;
+              return `<label class="exam-radio-opt ${optCorrect&&ex.submitted?'correct':optWrong?'incorrect':sel?'selected':''}">
+                <input type="radio" name="q${q.id}" value="${opt}" ${sel?'checked':''} ${ex.submitted?'disabled':''} onchange="setExamAnswer('${key}','${opt}')">
+                ${opt}${optCorrect&&ex.submitted?' ✓':''}
+              </label>`;
+            }).join('')}
+          </div>
+          ${ex.submitted&&isWrong?`<div class="exam-q-feedback incorrect" style="margin-top:4px">✗ Answer: ${q.answer}</div>`:''}
+        </div>`;
+      }
+      return '';
+    }).join('');
+
+    return `<div class="exam-section-divider">
+      <h4>Questions ${grp.questions[0].id}–${grp.questions[grp.questions.length-1].id}</h4>
+      <p>${grp.instruction}${grp.limit?` <span class="limit">(${grp.limit})</span>`:''}</p>
+    </div>
+    ${qItems}`;
+  }).join('');
+
+  // Part dots for bottom nav
+  const allQIds = data.parts.flatMap((p2,pi)=>p2.groups.flatMap(g=>g.questions.map(q=>({id:q.id,pi}))));
+  const dotsHTML = data.parts.map((p2,pi)=>{
+    const pQIds = p2.groups.flatMap(g=>g.questions.map(q=>q.id));
+    const pAns = pQIds.filter(id=>ex.answers[pi+'_'+id]!==undefined&&ex.answers[pi+'_'+id]!=='').length;
+    return `<button class="exam-part-btn ${pi===part?'active':''}" onclick="setExamPart(${pi})">Part ${pi+1} <span style="opacity:.8;font-weight:400">${pAns} of ${pQIds.length}</span></button>`;
+  }).join('');
+
+  // Score modal
+  const scoreModal = ex.showScore ? (() => {
+    let correct=0, total=0;
+    data.parts.forEach((p2,pi)=>{
+      p2.groups.forEach(g=>{
+        g.questions.forEach(q=>{
+          total++;
+          const v=(ex.answers[pi+'_'+q.id]||'').trim().toLowerCase();
+          if(v===q.answer.trim().toLowerCase()) correct++;
+        });
+      });
+    });
+    const pct = Math.round((correct/total)*100);
+    const band = pct>=85?8.5:pct>=75?7.5:pct>=65?6.5:pct>=55?6:pct>=45?5.5:5;
+    return `<div class="exam-score-overlay">
+      <div class="exam-score-card">
+        <div style="font-size:13px;color:#6b7280;margin-bottom:4px">你的得分</div>
+        <div class="exam-score-big" style="color:${pct>=75?'#2e7d52':pct>=55?'#d97706':'#dc2626'}">${correct}<span style="font-size:28px;color:#9ca3af">/${total}</span></div>
+        <div class="exam-score-band">预估阅读 Band ${band}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+          ${data.parts.map((p2,pi)=>{
+            let c=0,t=0;
+            p2.groups.forEach(g=>g.questions.forEach(q=>{t++;if((ex.answers[pi+'_'+q.id]||'').trim().toLowerCase()===q.answer.trim().toLowerCase())c++;}));
+            return `<div style="background:#f8fafb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#1a1a2e">${c}/${t}</div><div style="font-size:11px;color:#6b7280">Part ${pi+1}</div></div>`;
+          }).join('')}
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="S.exam.showScore=false;render()" style="flex:1;background:#f0faf4;border:1px solid #2e7d5244;border-radius:8px;padding:12px;color:#1a5c38;font-weight:600;cursor:pointer;font-family:inherit">查看答案</button>
+          <button onclick="resetExam()" style="flex:1;background:#2e7d52;border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer;font-family:inherit">重新开始</button>
+        </div>
+      </div>
+    </div>`;
+  })() : '';
+
+  return `<div class="exam-shell">
+    ${scoreModal}
+    <div class="exam-topbar">
+      <div class="exam-topbar-left">
+        <div class="exam-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="exam-timer ${timerWarn?'exam-timer-warn':''}">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${mm}:${ss} remaining
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:12px;color:#6b7280">${answeredCount}/${partQIds.length} answered</span>
+        ${ex.submitted
+          ? `<button class="exam-btn-submit" onclick="resetExam()">↺ New Test</button>`
+          : `<button class="exam-btn-submit" onclick="submitExam()">Submit ➤</button>`}
+        <button class="exam-btn-back" onclick="resetExam()">Exit</button>
+      </div>
+    </div>
+
+    <div class="exam-body">
+      <div class="exam-passage-panel" id="passage-panel">
+        <div class="exam-passage-header">
+          <div class="part-label">Reading Passage ${part+1}</div>
+          <div class="passage-title">${partData.title}</div>
+        </div>
+        <div class="exam-passage-content">${passageHTML}</div>
+      </div>
+      <div class="exam-q-panel" id="q-panel">
+        <div class="exam-q-header">
+          <h3>Questions ${partQIds[0]}–${partQIds[partQIds.length-1]}</h3>
+          <div class="q-range">Passage ${part+1}: ${partData.title}</div>
+        </div>
+        <div class="exam-q-body">${qHTML}</div>
+      </div>
+    </div>
+
+    <div class="exam-bottom">
+      ${dotsHTML}
+    </div>
+  </div>`;
+}
+
+async function startExam(difficulty) {
+  clearInterval(examTimer);
+  const topicIdx = S.topicIndex % EXAM_TOPICS.length;
+  const topic = EXAM_TOPICS[topicIdx];
+  S.exam = { loading:true, data:null, error:'', part:0, answers:{}, submitted:false, timerSec:3600, timerRunning:false, showScore:false };
+  render();
+  try {
+    // Generate all 3 parts sequentially
+    const parts = [];
+    for (let p=1; p<=3; p++) {
+      const d = await callAPI(EXAM_PROMPT(topic, p));
+      d.title = d.title || topic + ' - Part ' + p;
+      parts.push(d);
+    }
+    S.exam.data = { topic, parts };
+    S.exam.loading = false;
+    S.exam.timerRunning = true;
+    startExamTimer();
+  } catch(e) {
+    S.exam.loading = false;
+    S.exam.error = '生成失败：' + e.message + ' — 请检查 API Key 余额后重试';
+  }
+  render();
+}
+
+function startExamTimer() {
+  clearInterval(examTimer);
+  examTimer = setInterval(() => {
+    if (!S.exam.timerRunning) return;
+    S.exam.timerSec--;
+    const el = document.querySelector('.exam-timer');
+    if (el) {
+      const sec = S.exam.timerSec;
+      const mm = String(Math.floor(sec/60)).padStart(2,'0');
+      const ss = String(sec%60).padStart(2,'0');
+      el.textContent = mm + ':' + ss + ' remaining';
+      if (sec < 300) el.classList.add('exam-timer-warn');
+    }
+    if (S.exam.timerSec <= 0) {
+      clearInterval(examTimer);
+      S.exam.timerRunning = false;
+      submitExam();
+    }
+  }, 1000);
+}
+
+function setExamAnswer(key, val) {
+  S.exam.answers[key] = val;
+  // update dot indicator without full re-render
+  const partIdx = parseInt(key.split('_')[0]);
+  const qId = parseInt(key.split('_')[1]);
+  const dot = document.querySelector(`[data-qid="${qId}"]`);
+  if (dot && val) dot.classList.add('answered');
+}
+
+function setExamPart(pi) {
+  S.exam.part = pi;
+  render();
+  if (S.exam.timerRunning) startExamTimer();
+}
+
+function submitExam() {
+  clearInterval(examTimer);
+  S.exam.submitted = true;
+  S.exam.timerRunning = false;
+  S.exam.showScore = true;
+  render();
+}
+
+function resetExam() {
+  clearInterval(examTimer);
+  S.topicIndex = (S.topicIndex + 1);
+  localStorage.setItem('topicIndex', S.topicIndex);
+  S.exam = { loading:false, data:null, error:'', part:0, answers:{}, submitted:false, timerSec:3600, timerRunning:false, showScore:false };
+  render();
+}
 // ─── Bind ─────────────────────────────────────────────────────────
 function bindPage(){}
 
