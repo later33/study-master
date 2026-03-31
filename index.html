@@ -169,6 +169,7 @@ nav svg{width:20px;height:20px}
 
 /* Word popup */
 .word-popup-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:0 12px 84px}
+body.exam-mode .word-popup-overlay{padding:0 12px 20px}
 .word-popup{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);width:100%;max-width:500px;padding:22px;animation:slideUp .2s ease}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .popup-word{font-family:'Crimson Pro',serif;font-size:28px;font-style:italic;color:var(--text);margin-bottom:2px}
@@ -1299,9 +1300,9 @@ function exampageHTML() {
   const partQIds = partData.groups.flatMap(g=>g.questions.map(q=>q.id));
   const answeredCount = partQIds.filter(id=>ex.answers['0_'+id]!==undefined&&ex.answers['0_'+id]!=='').length;
 
-  // Build passage HTML
+  // Build passage HTML - clickable words using renderPassage()
   const passageHTML = partData.paragraphs.map(p=>`
-    <p><span class="para-label">${p.label}.</span>${p.text}</p>`).join('');
+    <p><span class="para-label">${p.label}.</span><span>${renderPassage(p.text)}</span></p>`).join('');
 
   // Build questions HTML
   const qHTML = partData.groups.map((grp,gi) => {
@@ -1413,6 +1414,7 @@ function exampageHTML() {
   })() : '';
 
   return `<div class="exam-shell">
+    ${popupHTML()}
     ${scoreModal}
     <div class="exam-topbar">
       <div class="exam-topbar-left">
@@ -1436,6 +1438,9 @@ function exampageHTML() {
         <div class="exam-passage-header">
           <div class="part-label">Reading Passage · ${ex.difficulty===1?"Basic":ex.difficulty===2?"Intermediate":"Advanced"}</div>
           <div class="passage-title">${partData.title}</div>
+        </div>
+        <div style="padding:6px 20px 0;font-size:11px;color:#6b7280;letter-spacing:.3px">
+          💡 点击单词可查词义并加入单词本
         </div>
         <div class="exam-passage-content">${passageHTML}</div>
       </div>
