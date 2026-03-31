@@ -624,15 +624,238 @@ function addFromScratch(){
   save('vocab',nv);inp.value='';
 }
 
+const DICT = {
+'abandon':['əˈbændən','v.','放弃；抛弃','The company abandoned the project due to lack of funding.','写作高频词，常搭配 abandon the idea/plan/hope'],
+'abstract':['ˈæbstrækt','adj./n.','抽象的；摘要','The painting was too abstract for most viewers.','学术写作中 abstract 指论文摘要'],
+'academic':['ˌækəˈdemɪk','adj.','学术的','She pursued an academic career after graduating.','IELTS 阅读高频背景词'],
+'access':['ˈækses','n./v.','获取；通道','Many people lack access to clean water.','Task 2 常用：access to education/healthcare'],
+'accommodation':['əˌkɒməˈdeɪʃn','n.','住所；住宿','Finding affordable accommodation in the city is difficult.','GT Task 1 高频词，注意双 c 双 m 拼写'],
+'accompany':['əˈkʌmpəni','v.','陪同；伴随','A guide will accompany you throughout the tour.','搭配 be accompanied by'],
+'accurate':['ˈækjərət','adj.','准确的','The report must be accurate and up to date.','写作中替换 correct 的好词'],
+'achieve':['əˈtʃiːv','v.','实现；达到','It takes hard work to achieve your goals.','高频动词，名词形式 achievement'],
+'acknowledge':['əkˈnɒlɪdʒ','v.','承认；致谢','Scientists acknowledge the limitations of the study.','学术写作常用，= admit/recognise'],
+'adapt':['əˈdæpt','v.','适应；改编','Animals must adapt to changing environments.','搭配 adapt to，名词 adaptation'],
+'adequate':['ˈædɪkwət','adj.','足够的；适当的','The facilities are not adequate for the number of students.','反义词 inadequate 同样高频'],
+'adjust':['əˈdʒʌst','v.','调整；适应','It took time to adjust to the new climate.','搭配 adjust to'],
+'administration':['ədˌmɪnɪˈstreɪʃn','n.','管理；行政','The administration of large organisations is complex.','动词 administer，形容词 administrative'],
+'adopt':['əˈdɒpt','v.','采用；收养','Many countries have adopted similar policies.','搭配 adopt a policy/approach/strategy'],
+'advocate':['ˈædvəkeɪt','v./n.','倡导；支持者','Health experts advocate regular exercise.','写作论证段常用词'],
+'affect':['əˈfekt','v.','影响','Pollution affects the health of local residents.','注意与 effect（名词）区分'],
+'allocate':['ˈæləkeɪt','v.','分配','The government allocates funds to public services.','搭配 allocate resources/time/money'],
+'alternative':['ɔːlˈtɜːnətɪv','n./adj.','替代方案；可选择的','We need to find an alternative source of energy.','写作中提对策时常用'],
+'analyse':['ˈænəlaɪz','v.','分析','Researchers analysed data from 500 participants.','名词 analysis，形容词 analytical'],
+'approach':['əˈprəʊtʃ','n./v.','方法；途径；接近','A different approach is needed to solve this problem.','学术写作核心词'],
+'appropriate':['əˈprəʊpriət','adj.','适当的','It is appropriate to cite your sources in academic writing.','反义词 inappropriate'],
+'approximately':['əˈprɒksɪmətli','adv.','大约','The journey takes approximately two hours.','数据描述常用词，= roughly/around'],
+'assess':['əˈses','v.','评估','Teachers assess students through regular tests.','名词 assessment，同义词 evaluate'],
+'assume':['əˈsjuːm','v.','假设；承担','We cannot assume that all students learn the same way.','名词 assumption，学术写作常用'],
+'attitude':['ˈætɪtjuːd','n.','态度','Public attitudes towards climate change are shifting.','搭配 attitude towards/to'],
+'attribute':['əˈtrɪbjuːt','v.','归因于','The success was attributed to teamwork.','搭配 attribute sth to sth'],
+'available':['əˈveɪləbl','adj.','可获得的；有空的','Resources are not equally available to everyone.','写作描述资源分配常用'],
+'aware':['əˈweə','adj.','意识到的','People are increasingly aware of environmental issues.','搭配 be aware of，名词 awareness'],
+'barrier':['ˈbæriə','n.','障碍；壁垒','Language is often a barrier to integration.','搭配 barrier to，Task 2 常用'],
+'benefit':['ˈbenɪfɪt','n./v.','益处；受益','Exercise has many health benefits.','搭配 benefit from，反义词 drawback'],
+'bias':['ˈbaɪəs','n.','偏见；偏差','The study may be affected by selection bias.','学术阅读高频词'],
+'broadly':['ˈbrɔːdli','adv.','大体上；宽泛地','The findings are broadly consistent with earlier research.','学术写作常用副词'],
+'capacity':['kəˈpæsɪti','n.','能力；容量','The stadium has a capacity of 80,000.','搭配 capacity for/to do'],
+'cause':['kɔːz','n./v.','原因；导致','Pollution causes serious damage to ecosystems.','Task 2 因果关系核心词'],
+'challenge':['ˈtʃælɪndʒ','n./v.','挑战','Climate change is one of the greatest challenges of our time.','搭配 face/pose a challenge'],
+'circumstance':['ˈsɜːkəmstæns','n.','情况；环境','In some circumstances, working from home is more productive.','常用复数 circumstances'],
+'cite':['saɪt','v.','引用；列举','The report cites several studies to support its claims.','学术写作常用，= quote/reference'],
+'claim':['kleɪm','v./n.','声称；主张','Some researchers claim that social media harms mental health.','引用观点时常用'],
+'clarify':['ˈklærɪfaɪ','v.','澄清；阐明','Could you clarify what you mean by that?','口语Part 3常用词'],
+'classify':['ˈklæsɪfaɪ','v.','分类','Scientists classify organisms into different species.','名词 classification'],
+'colleague':['ˈkɒliːɡ','n.','同事','She discussed the project with her colleagues.','职场口语高频词'],
+'commercial':['kəˈmɜːʃl','adj.','商业的','The invention had enormous commercial potential.','搭配 commercial success/value'],
+'community':['kəˈmjuːnɪti','n.','社区；群体','The local community opposed the new development.','Task 2 社会类话题核心词'],
+'compare':['kəmˈpeə','v.','比较','The study compares outcomes across different countries.','搭配 compare with/to'],
+'complex':['ˈkɒmpleks','adj.','复杂的','The relationship between diet and health is complex.','名词 complexity'],
+'concentrate':['ˈkɒnsntreɪt','v.','集中；专注','Students find it hard to concentrate in noisy environments.','搭配 concentrate on'],
+'concern':['kənˈsɜːn','n./v.','担忧；涉及','There is growing concern about air quality.','搭配 concern about/over'],
+'conclude':['kənˈkluːd','v.','得出结论','The study concluded that exercise improves mood.','名词 conclusion，学术写作核心词'],
+'consequence':['ˈkɒnsɪkwəns','n.','后果','Deforestation has serious consequences for biodiversity.','搭配 as a consequence of'],
+'considerable':['kənˈsɪdərəbl','adj.','相当大的','There has been considerable progress in medical research.','副词 considerably，学术写作常用'],
+'consist':['kənˈsɪst','v.','由...组成','The committee consists of twelve members.','搭配 consist of，注意不用被动'],
+'consume':['kənˈsjuːm','v.','消耗；消费','Modern cities consume vast amounts of energy.','名词 consumption，consumer'],
+'contribute':['kənˈtrɪbjuːt','v.','贡献；导致','Fossil fuels contribute to global warming.','搭配 contribute to，名词 contribution'],
+'controversial':['ˌkɒntrəˈvɜːʃl','adj.','有争议的','Genetic engineering remains a controversial topic.','名词 controversy，写作观点类话题常用'],
+'conventional':['kənˈvenʃənl','adj.','传统的；常规的','Conventional medicine focuses on treating symptoms.','反义词 unconventional，alternative'],
+'convince':['kənˈvɪns','v.','说服；使信服','It is difficult to convince people to change their habits.','搭配 convince sb to do / that'],
+'cope':['kəʊp','v.','应对；处理','Many students struggle to cope with exam pressure.','搭配 cope with'],
+'crucial':['ˈkruːʃl','adj.','至关重要的','Education is crucial for economic development.','= vital/essential，写作常用强调词'],
+'culture':['ˈkʌltʃə','n.','文化','Exposure to different cultures broadens your perspective.','形容词 cultural，副词 culturally'],
+'debate':['dɪˈbeɪt','n./v.','辩论；争论','There is ongoing debate about the causes of obesity.','搭配 debate about/over'],
+'decline':['dɪˈklaɪn','v./n.','下降；拒绝','The number of bees has declined sharply in recent years.','图表描述核心词，= decrease/drop'],
+'define':['dɪˈfaɪn','v.','定义','It is important to define key terms in academic writing.','名词 definition'],
+'demonstrate':['ˈdemənstreɪt','v.','证明；示范','Research demonstrates a clear link between sleep and performance.','= show/prove，学术写作更正式'],
+'deny':['dɪˈnaɪ','v.','否认；拒绝','The government denied responsibility for the crisis.','搭配 deny doing sth'],
+'depend':['dɪˈpend','v.','取决于；依赖','The outcome depends on a number of factors.','搭配 depend on，形容词 dependent'],
+'describe':['dɪˈskraɪb','v.','描述','The graph describes changes in global temperature over 50 years.','Task 1 核心动词'],
+'despite':['dɪˈspaɪt','prep.','尽管','Despite the challenges, the project was completed on time.','= although/even though，用于让步'],
+'determine':['dɪˈtɜːmɪn','v.','决定；查明','Several factors determine a student\'s academic success.','名词 determination，形容词 determined'],
+'develop':['dɪˈveləp','v.','发展；开发','Countries need to develop renewable energy sources.','名词 development，形容词 developed'],
+'diverse':['daɪˈvɜːs','adj.','多样的','Cities tend to be culturally diverse.','名词 diversity，动词 diversify'],
+'dominant':['ˈdɒmɪnənt','adj.','主要的；占主导地位的','English has become the dominant language of science.','动词 dominate，名词 dominance'],
+'dramatic':['drəˈmætɪk','adj.','显著的；戏剧性的','There has been a dramatic increase in smartphone use.','副词 dramatically，图表描述常用'],
+'economy':['ɪˈkɒnəmi','n.','经济','The global economy has been affected by the pandemic.','形容词 economic，副词 economically'],
+'effective':['ɪˈfektɪv','adj.','有效的','Regular revision is an effective way to improve memory.','名词 effectiveness，副词 effectively'],
+'eliminate':['ɪˈlɪmɪneɪt','v.','消除；淘汰','We must eliminate waste in the production process.','名词 elimination'],
+'emerge':['ɪˈmɜːdʒ','v.','出现；浮现','A new theory has emerged to explain the phenomenon.','名词 emergence，形容词 emerging'],
+'emphasise':['ˈemfəsaɪz','v.','强调','The report emphasises the need for immediate action.','名词 emphasis，搭配 place emphasis on'],
+'enable':['ɪˈneɪbl','v.','使能够','Technology enables people to work from anywhere.','搭配 enable sb to do sth'],
+'encourage':['ɪnˈkʌrɪdʒ','v.','鼓励；促进','Governments should encourage the use of public transport.','名词 encouragement'],
+'enhance':['ɪnˈhɑːns','v.','提高；增强','Regular reading can enhance vocabulary skills.','= improve/boost，写作替换词'],
+'ensure':['ɪnˈʃʊə','v.','确保','Measures must be taken to ensure food safety.','搭配 ensure that'],
+'environment':['ɪnˈvaɪrənmənt','n.','环境','Protecting the environment is a global responsibility.','形容词 environmental，副词 environmentally'],
+'estimate':['ˈestɪmeɪt','v./n.','估计','Scientists estimate that the universe is 13.8 billion years old.','数据类写作常用词'],
+'evaluate':['ɪˈvæljueɪt','v.','评估','Students are asked to evaluate the strengths of each argument.','名词 evaluation，= assess'],
+'evidence':['ˈevɪdəns','n.','证据','There is strong evidence to support this theory.','搭配 evidence of/that，学术写作核心词'],
+'expand':['ɪkˈspænd','v.','扩大；扩展','Cities are expanding rapidly into surrounding rural areas.','名词 expansion，形容词 expanding'],
+'experiment':['ɪkˈsperɪmənt','n./v.','实验','Scientists conducted an experiment to test the hypothesis.','形容词 experimental'],
+'explain':['ɪkˈspleɪn','v.','解释','The teacher explained the concept clearly.','名词 explanation'],
+'expose':['ɪkˈspəʊz','v.','暴露；揭露','Children are exposed to advertising from a very young age.','搭配 expose to，名词 exposure'],
+'extend':['ɪkˈstend','v.','延伸；扩展','Plans to extend the railway network are underway.','名词 extension，形容词 extensive'],
+'factor':['ˈfæktə','n.','因素','Several factors contribute to academic success.','搭配 key/major/important factor'],
+'feature':['ˈfiːtʃə','n./v.','特征；以...为特色','A key feature of modern cities is their diversity.','Task 1 常用描述词'],
+'focus':['ˈfəʊkəs','v./n.','聚焦；重点','The report focuses on environmental issues.','搭配 focus on'],
+'force':['fɔːs','n./v.','力量；迫使','Economic forces are reshaping the global job market.','搭配 force sb to do'],
+'formulate':['ˈfɔːmjəleɪt','v.','制定；阐明','The government formulated a new environmental policy.','名词 formulation'],
+'function':['ˈfʌŋkʃn','n./v.','功能；运作','The main function of the liver is to filter blood.','形容词 functional'],
+'fundamental':['ˌfʌndəˈmentl','adj.','根本的；基本的','Access to education is a fundamental human right.','副词 fundamentally'],
+'generate':['ˈdʒenəreɪt','v.','产生；发电','Wind turbines generate clean electricity.','名词 generation'],
+'global':['ˈɡləʊbl','adj.','全球的','Climate change is a global problem requiring global solutions.','副词 globally，名词 globalisation'],
+'gradual':['ˈɡrædʒuəl','adj.','逐渐的','There has been a gradual improvement in air quality.','副词 gradually，图表描述常用'],
+'guarantee':['ˌɡærənˈtiː','v./n.','保证','Education does not guarantee employment.','搭配 guarantee that'],
+'highlight':['ˈhaɪlaɪt','v.','强调；突出','The study highlights the importance of early childhood education.','= emphasise/point out，写作替换词'],
+'hypothesis':['haɪˈpɒθəsɪs','n.','假设','The hypothesis was tested through a series of experiments.','复数 hypotheses，动词 hypothesise'],
+'identify':['aɪˈdentɪfaɪ','v.','识别；确认','Researchers identified three key risk factors.','名词 identification'],
+'illustrate':['ˈɪləstreɪt','v.','说明；举例','The graph illustrates changes in population over time.','Task 1 描述图表核心词'],
+'impact':['ˈɪmpækt','n./v.','影响','Social media has had a significant impact on communication.','搭配 impact on，= effect'],
+'implement':['ˈɪmplɪment','v.','实施','The government plans to implement new education reforms.','名词 implementation'],
+'imply':['ɪmˈplaɪ','v.','暗示','The data implies a strong correlation between the two variables.','名词 implication，= suggest'],
+'improve':['ɪmˈpruːv','v.','改善','Regular exercise can significantly improve mental health.','名词 improvement'],
+'include':['ɪnˈkluːd','v.','包括','The survey included over 1,000 participants.','名词 inclusion，形容词 inclusive'],
+'increase':['ɪnˈkriːs','v./n.','增加','There has been a steady increase in global temperatures.','反义词 decrease，图表描述核心词'],
+'indicate':['ˈɪndɪkeɪt','v.','表明；指示','The results indicate a significant improvement.','名词 indication，= suggest/show'],
+'individual':['ˌɪndɪˈvɪdʒuəl','adj./n.','个人的；个体','The policy affects every individual differently.','副词 individually'],
+'inevitable':['ɪnˈevɪtəbl','adj.','不可避免的','Some degree of inequality seems inevitable in any society.','副词 inevitably'],
+'influence':['ˈɪnfluəns','n./v.','影响','Parents have a strong influence on children\'s behaviour.','搭配 influence on，= affect/impact'],
+'innovation':['ˌɪnəˈveɪʃn','n.','创新','Technological innovation is driving economic growth.','动词 innovate，形容词 innovative'],
+'insight':['ˈɪnsaɪt','n.','洞察力；深刻理解','The study provides valuable insights into consumer behaviour.','搭配 insight into'],
+'integrate':['ˈɪntɪɡreɪt','v.','整合；融入','Schools should integrate technology into everyday teaching.','名词 integration'],
+'interpret':['ɪnˈtɜːprɪt','v.','解释；口译','Different people may interpret the data differently.','名词 interpretation'],
+'investigate':['ɪnˈvestɪɡeɪt','v.','调查','Scientists are investigating the causes of the disease.','名词 investigation'],
+'involve':['ɪnˈvɒlv','v.','涉及；包含','The project involves collecting data from multiple sources.','名词 involvement'],
+'justify':['ˈdʒʌstɪfaɪ','v.','证明合理；辩护','It is difficult to justify the high cost of private education.','名词 justification'],
+'largely':['ˈlɑːdʒli','adv.','主要地；大部分','The success was largely due to effective teamwork.','= mainly/primarily，写作替换词'],
+'link':['lɪŋk','n./v.','联系；连接','There is a clear link between poverty and poor health.','搭配 link between，= connection'],
+'locate':['ləʊˈkeɪt','v.','位于；找到','The factory is located on the outskirts of the city.','名词 location'],
+'maintain':['meɪnˈteɪn','v.','维持；保持','It is essential to maintain a healthy work-life balance.','名词 maintenance'],
+'major':['ˈmeɪdʒə','adj.','主要的；重大的','Air pollution is a major public health concern.','反义词 minor'],
+'mechanism':['ˈmekənɪzəm','n.','机制；机械装置','The immune system has complex defence mechanisms.','学术阅读高频词'],
+'minimum':['ˈmɪnɪməm','n./adj.','最低限度','The minimum wage should be enough to cover basic needs.','反义词 maximum'],
+'moreover':['mɔːrˈəʊvə','adv.','此外；而且','The plan is costly. Moreover, it may not be effective.','写作连接词，= furthermore/in addition'],
+'motive':['ˈməʊtɪv','n.','动机；目的','Understanding students\' motives can improve teaching.','动词 motivate，名词 motivation'],
+'notably':['ˈnəʊtəbli','adv.','尤其；显著地','Several countries, notably China, have invested heavily in solar energy.','= particularly/especially'],
+'numerous':['ˈnjuːmərəs','adj.','许多的','There are numerous factors that affect academic performance.','= many，写作替换词，更正式'],
+'obtain':['əbˈteɪn','v.','获得','It can be difficult to obtain accurate data.','= get/acquire，学术写作更正式'],
+'obvious':['ˈɒbviəs','adj.','明显的','There is an obvious connection between diet and health.','副词 obviously，= clear/evident'],
+'occur':['əˈkɜː','v.','发生','Major earthquakes rarely occur in this region.','名词 occurrence，= happen/take place'],
+'oppose':['əˈpəʊz','v.','反对','Many residents oppose the construction of the new highway.','名词 opposition，形容词 opposite'],
+'outcome':['ˈaʊtkʌm','n.','结果；成果','The outcome of the experiment was unexpected.','= result，Task 2 常用词'],
+'overcome':['ˌəʊvəˈkʌm','v.','克服','Developing countries face many challenges to overcome.','搭配 overcome difficulties/obstacles'],
+'overlap':['ˌəʊvəˈlæp','v./n.','重叠；交叉','There is some overlap between the two research areas.','学术阅读常用词'],
+'participate':['pɑːˈtɪsɪpeɪt','v.','参与','Students are encouraged to participate in class discussions.','名词 participation，搭配 participate in'],
+'perceive':['pəˈsiːv','v.','认为；感知','Risk is often perceived differently by different groups.','名词 perception'],
+'perspective':['pəˈspektɪv','n.','观点；角度','It is important to consider different perspectives.','搭配 from the perspective of'],
+'policy':['ˈpɒləsi','n.','政策','The government introduced a new housing policy.','Task 2 社会类话题核心词'],
+'potential':['pəˈtenʃl','adj./n.','潜在的；潜力','Renewable energy has the potential to replace fossil fuels.','副词 potentially'],
+'predict':['prɪˈdɪkt','v.','预测','Scientists predict that global temperatures will rise further.','名词 prediction，形容词 predictable'],
+'primary':['ˈpraɪməri','adj.','主要的；初级的','The primary cause of obesity is poor diet.','副词 primarily，= mainly/chiefly'],
+'principle':['ˈprɪnsɪpl','n.','原则；原理','The principle of fairness should guide educational policy.','注意与 principal 区分'],
+'priority':['praɪˈɒrɪti','n.','优先事项','Education should be a national priority.','搭配 give priority to'],
+'process':['ˈprəʊses','n.','过程；进程','Learning a language is a gradual process.','Task 1 流程图核心词'],
+'promote':['prəˈməʊt','v.','促进；宣传','Governments should promote healthy eating habits.','名词 promotion'],
+'proportion':['prəˈpɔːʃn','n.','比例','A large proportion of the population lives in urban areas.','搭配 proportion of，Task 1 核心词'],
+'prove':['pruːv','v.','证明','The experiment proved the theory correct.','名词 proof，形容词 proven'],
+'provide':['prəˈvaɪd','v.','提供','The government provides funding for public education.','名词 provision'],
+'publish':['ˈpʌblɪʃ','v.','出版；发表','The findings were published in a leading scientific journal.','名词 publication'],
+'rapid':['ˈræpɪd','adj.','快速的','There has been rapid growth in the use of electric vehicles.','副词 rapidly，= fast/swift'],
+'rather':['ˈrɑːðə','adv.','相当；而不是','The problem is social rather than economic.','搭配 rather than，= instead of'],
+'reduce':['rɪˈdjuːs','v.','减少','Recycling helps reduce the amount of waste sent to landfill.','名词 reduction，Task 2 常用词'],
+'refer':['rɪˈfɜː','v.','提及；查阅','The report refers to several case studies.','名词 reference，搭配 refer to'],
+'reflect':['rɪˈflekt','v.','反映；思考','The statistics reflect growing inequality in society.','名词 reflection'],
+'region':['ˈriːdʒən','n.','地区；区域','The northern region receives less rainfall than the south.','形容词 regional'],
+'regulate':['ˈreɡjuleɪt','v.','监管；调节','Governments need to better regulate social media companies.','名词 regulation，形容词 regulatory'],
+'replace':['rɪˈpleɪs','v.','取代；替换','Electric cars may eventually replace petrol vehicles.','名词 replacement'],
+'require':['rɪˈkwaɪə','v.','需要；要求','The job requires excellent communication skills.','名词 requirement'],
+'research':['rɪˈsɜːtʃ','n./v.','研究','Research suggests that exercise improves cognitive function.','搭配 conduct/carry out research'],
+'resource':['rɪˈzɔːs','n.','资源','Natural resources must be managed sustainably.','搭配 natural/limited resources'],
+'respond':['rɪˈspɒnd','v.','回应；响应','Governments must respond quickly to public health crises.','名词 response，搭配 respond to'],
+'restrict':['rɪˈstrɪkt','v.','限制','Speed limits restrict how fast drivers can travel.','名词 restriction，形容词 restricted'],
+'reveal':['rɪˈviːl','v.','揭示；透露','The study reveals a strong link between stress and illness.','= show/demonstrate，学术写作常用'],
+'role':['rəʊl','n.','角色；作用','Education plays a vital role in reducing poverty.','搭配 play a role in'],
+'significant':['sɪɡˈnɪfɪkənt','adj.','显著的；重要的','There has been a significant rise in obesity rates.','副词 significantly，名词 significance'],
+'similar':['ˈsɪmɪlə','adj.','相似的','The results are similar to those of previous studies.','副词 similarly，名词 similarity'],
+'solution':['səˈluːʃn','n.','解决方案','Education is seen as the key solution to poverty.','搭配 solution to，Task 2 核心词'],
+'source':['sɔːs','n.','来源；出处','Renewable energy sources include solar and wind power.','搭配 source of'],
+'strategy':['ˈstrætədʒi','n.','策略；战略','Companies need a clear marketing strategy.','形容词 strategic，副词 strategically'],
+'structure':['ˈstrʌktʃə','n.','结构','The structure of the essay should be clear and logical.','形容词 structural'],
+'substantial':['səbˈstænʃl','adj.','大量的；实质性的','There has been a substantial increase in living costs.','副词 substantially，= considerable/significant'],
+'suggest':['səˈdʒest','v.','建议；暗示','Research suggests that bilingualism delays dementia.','名词 suggestion'],
+'support':['səˈpɔːt','v./n.','支持','The data supports the conclusion that exercise reduces stress.','搭配 support for'],
+'survey':['ˈsɜːveɪ','n./v.','调查','A survey of 1,000 adults found that 60% supported the policy.','Task 1/2 数据来源常用词'],
+'sustainable':['səˈsteɪnəbl','adj.','可持续的','We need sustainable solutions to environmental problems.','名词 sustainability，副词 sustainably'],
+'technology':['tekˈnɒlədʒi','n.','技术','Technology is transforming the way we work and communicate.','形容词 technological，副词 technologically'],
+'tend':['tend','v.','倾向于','People tend to underestimate the health risks of stress.','名词 tendency，搭配 tend to do'],
+'theory':['ˈθɪəri','n.','理论','Darwin\'s theory of evolution changed our understanding of life.','形容词 theoretical，副词 theoretically'],
+'therefore':['ˈðeəfɔː','adv.','因此','The sample size was small; therefore, the results may not be reliable.','写作因果连接词，= thus/hence/as a result'],
+'trend':['trend','n.','趋势','There is a growing trend towards remote working.','搭配 trend towards，Task 1/2 核心词'],
+'typical':['ˈtɪpɪkl','adj.','典型的','This is a typical example of the problem.','副词 typically，名词 type'],
+'undermine':['ˌʌndəˈmaɪn','v.','削弱；破坏','Corruption undermines trust in government.','= weaken/damage，写作论证常用'],
+'unlikely':['ʌnˈlaɪkli','adj.','不太可能的','It is unlikely that the problem will be solved overnight.','搭配 unlikely to do/that'],
+'urban':['ˈɜːbən','adj.','城市的','Urban areas tend to have better access to healthcare.','反义词 rural，名词 urbanisation'],
+'valid':['ˈvælɪd','adj.','有效的；合理的','This is a valid argument that deserves serious consideration.','名词 validity，反义词 invalid'],
+'vary':['ˈveəri','v.','变化；不同','Results may vary depending on individual circumstances.','名词 variation/variety，形容词 various'],
+'vital':['ˈvaɪtl','adj.','至关重要的','Clean water is vital for human survival.','= crucial/essential，副词 vitally'],
+'widespread':['ˈwaɪdspred','adj.','广泛的','There is widespread support for renewable energy.','搭配 become widespread'],
+'whereas':['weərˈæz','conj.','然而；鉴于','Some students prefer group work, whereas others work better alone.','写作对比连接词，= while/but'],
+};
+
+// Persistent lookup cache (localStorage)
+function getDictCache(){try{return JSON.parse(localStorage.getItem('dictCache')||'{}')}catch{return{}}}
+function setDictCache(word,data){try{const c=getDictCache();c[word]=data;localStorage.setItem('dictCache',JSON.stringify(c))}catch{}}
+
 async function wordClick(word, sentence){
   if(S.popup.visible&&S.popup.word===word){S.popup.visible=false;render();return}
+  // 1. Check built-in dictionary first (instant)
+  if(DICT[word]){
+    const [phonetic,partOfSpeech,chineseMeaning,example,ieltsNote]=DICT[word];
+    const data={word,phonetic,partOfSpeech,chineseMeaning,example,ieltsNote};
+    S.popup={visible:true,word,sentence,loading:false,data,added:false,error:''};
+    S.vocab_state.meanings[word]=data;
+    render();return;
+  }
+  // 2. Check persistent cache (instant)
+  const cached=getDictCache()[word];
+  if(cached){
+    S.popup={visible:true,word,sentence,loading:false,data:cached,added:false,error:''};
+    S.vocab_state.meanings[word]=cached;
+    render();return;
+  }
+  // 3. Session memory cache (instant)
+  if(S.vocab_state.meanings[word]){
+    S.popup={visible:true,word,sentence,loading:false,data:S.vocab_state.meanings[word],added:false,error:''};
+    render();return;
+  }
+  // 4. API call (slow - only for unknown words)
   S.popup={visible:true,word,sentence,loading:true,data:null,added:false,error:''};
   render();
   try{
     const data=await callAPI(`Define the English word "${word}" for an IELTS/考研 student. Respond ONLY in valid JSON no markdown: {"word":"${word}","phonetic":"/ /","partOfSpeech":"noun","chineseMeaning":"中文释义","example":"English example sentence.","ieltsNote":"一句考试提示"}`);
     S.popup.data=data;S.popup.loading=false;
-    // also cache in vocab_state meanings
     S.vocab_state.meanings[word]=data;
+    setDictCache(word,data);
   }catch(e){S.popup.error='查询失败：'+e.message;S.popup.loading=false;}
   render();
 }
@@ -742,10 +965,20 @@ function addVocabManual(){
 }
 
 async function lookupVocab(word){
+  // Check dict/cache first
+  if(DICT[word]){
+    const [phonetic,partOfSpeech,chineseMeaning,example,ieltsNote]=DICT[word];
+    S.vocab_state.meanings[word]={word,phonetic,partOfSpeech,chineseMeaning,example,ieltsNote};
+    render();return;
+  }
+  const cached=getDictCache()[word];
+  if(cached){S.vocab_state.meanings[word]=cached;render();return;}
+  if(S.vocab_state.meanings[word]){render();return;}
   S.vocab_state.loadingWord=word;render();
   try{
     const data=await callAPI(`Define the English word "${word}" for an IELTS/考研 student. Respond ONLY in valid JSON no markdown: {"word":"${word}","phonetic":"/ /","partOfSpeech":"noun","chineseMeaning":"中文释义","example":"English example sentence.","ieltsNote":"一句考试提示"}`);
     S.vocab_state.meanings[word]=data;
+    setDictCache(word,data);
   }catch(e){alert('查询失败：'+e.message)}
   S.vocab_state.loadingWord=null;render();
 }
